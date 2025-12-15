@@ -1,6 +1,6 @@
 package model.dto;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class ProductDTO {
 	
@@ -10,10 +10,11 @@ public class ProductDTO {
 	private String productName;  		// 商品名 				(DB: 商品名)
 	private int price;           		// 価格 				(DB: 商品単価)
 	private String productImageUrl; 	// 画像URL 				(DB: 商品画像)
+	private String productDescription;  // 商品説明             (DB: PRODUCT_DESCRIPTION)
 	private boolean favorite;    		// おすすめ商品判定 	(DB: おすすめ選択)
 	
-	private Date createdAt;	     		// 作成時間 			(DB: 作成時間)
-	private Date updateAt;	     		// 更新時間 			(DB: 更新時間)
+	private Timestamp createdAt;	     		// 作成時間 			(DB: 作成時間)
+	private Timestamp updateAt;	     		// 更新時間 			(DB: 更新時間)
 	
 	//各属性のgetter&setter
 	//DAOでListに格納予定
@@ -54,16 +55,23 @@ public class ProductDTO {
 	public void setFavorite(boolean favorite) {
 		this.favorite = favorite;
 	}
-	public Date getCreatedAt() {
+	public String getProductDescription() {
+		return productDescription;
+	}
+	public void setProductDescription(String productDescription) {
+		this.productDescription = productDescription;
+	}
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Date getUpdateAt() {
+	public Timestamp getUpdateAt() {
 		return updateAt;
 	}
-	public void setUpdateAt(Date updateAt) {
+	public void setUpdateAt(Timestamp updateAt) {
 		this.updateAt = updateAt;
 	}
+	
 }

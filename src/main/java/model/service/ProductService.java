@@ -1,7 +1,9 @@
 package model.service;
+
 import java.util.List;
 
-import dao.ProductDAO;
+import dao.IProductDAO;
+import dao.ProductDAOMock;
 import model.dto.ProductDTO;
 
 /**
@@ -10,8 +12,11 @@ import model.dto.ProductDTO;
  */
 public class ProductService {
 
-	private ProductDAO productDAO = new ProductDAO();
+	//DB接続用
+	//private ProductDAO productDAO = new ProductDAO();
 
+	//モックDAOを使用(偽物Ver）
+	private final IProductDAO productDAO = new ProductDAOMock();
 	/**
 	 * 商品一覧画面表示に必要な情報を取得する。
 	 * * @return DBから取得したProductDTOのリスト

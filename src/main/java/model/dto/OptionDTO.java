@@ -1,6 +1,6 @@
 package model.dto;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class OptionDTO {
 
@@ -10,8 +10,8 @@ public class OptionDTO {
     private int price;			//オプション価格
     private int max;			//オプション条件
     
-    private Date createdAt;		//作成時間
-    private Date updatedAt;		//変更時間
+    private Timestamp createdAt;		//作成時間
+    private Timestamp updatedAt;		//変更時間
     
   //各属性のgetter&setter
 	public int getID() {
@@ -38,16 +38,17 @@ public class OptionDTO {
 	public void setMax(int max) {
 		this.max = max;
 	}
-	public Date getCreatedAt() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Date getUpdatedAt() {
+	public Timestamp getUpdatedAt() {
 		return updatedAt;
 	}
-	public void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(Timestamp updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+	
 }

@@ -14,7 +14,7 @@ import model.dto.ProductDTO;
  * ProductDAO (Data Access Object)
  * データベースへのアクセス層。
  */
-public class ProductDAO {
+public class ProductDAO implements IProductDAO{
 	/**】
      * DBから全商品情報を取得し、ProductDTOのリストとして返却する。
      * * @return 全商品のProductDTOリスト
