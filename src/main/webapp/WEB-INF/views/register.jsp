@@ -25,7 +25,7 @@
         <table>
             <tr>
                 <th>商品名（必須）</th>
-                <td><input type="text" name="name" required></td>
+                <td><input type="text" name="productName" required></td>
             </tr>
             <tr>
                 <th>カテゴリID（必須）</th>
@@ -44,7 +44,7 @@
             <tr>
                 <th>商品説明（必須）</th>
                 <td>
-                    <textarea name="description" rows="8" cols="50" required></textarea>
+                    <textarea name="productDescription" rows="8" cols="50" required></textarea>
                 </td>
             </tr>
             <tr>

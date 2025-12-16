@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 
 import jakarta.servlet.ServletException;
@@ -8,7 +9,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import model.dto.ProductDTO;
 import model.service.ProductService;
+import viewmodel.MenuRegisterViewModel;
 
 /**
  * Servlet implementation class RegisterServlet
@@ -59,8 +63,8 @@ public class RegisterServlet extends HttpServlet {
 
         try {
             // 1. ユーザー入力の取得 (Partとして取得するファイル以外)
-            name = request.getParameter("name");
-            String description = request.getParameter("description"); 
+            name = request.getParameter("productName");
+            String description = request.getParameter("productDescription"); 
             String priceStr = request.getParameter("price");
             String categoryIdStr = request.getParameter("categoryId");
             String isRecommendedStr = request.getParameter("isRecommended");
@@ -70,8 +74,8 @@ public class RegisterServlet extends HttpServlet {
             int categoryId = Integer.parseInt(categoryIdStr);
             
             // DTOに設定
-            productDTO.setName(name);
-            productDTO.setDescription(description); 
+            productDTO.setProductName(name);
+            productDTO.setProductDescription(description); 
             productDTO.setPrice(price);
             productDTO.setCategoryId(categoryId);
             productDTO.setFavorite(isRecommendedStr != null); 
@@ -142,6 +146,6 @@ public class RegisterServlet extends HttpServlet {
         }
         return null;
     }
-	}
+	
 
 }
