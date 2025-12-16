@@ -35,7 +35,7 @@ public class LineupServlet extends HttpServlet {
 			LineupViewModel viewModel = new LineupViewModel();
 			viewModel.setProductList(productList);
 			//全体の件数表示（必要なら実行）
-//			viewModel.setTotalItemCount(productList.size());
+			viewModel.setTotalItemCount(productList.size());
 
 			//商品が0件だった場合に実行
 			if(productList.isEmpty()) {

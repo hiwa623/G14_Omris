@@ -11,7 +11,7 @@
 	    <p>行いたい操作を選択してください。</p>
 	
 	    <ul>
-	        <li><a href="RegisterServlet">商品メニューの新規登録</a></li>
+	        <li><a href="RegisterServlet">商品の新規登録</a></li>
 	        
 	        <li><a href="#">売上の確認（未実装）</a></li>
 	        <li><a href="#">在庫管理（未実装）</a></li>

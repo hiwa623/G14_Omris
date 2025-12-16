@@ -16,6 +16,19 @@ public class ProductDTO {
 	private Timestamp createdAt;	     		// 作成時間 			(DB: 作成時間)
 	private Timestamp updateAt;	     		// 更新時間 			(DB: 更新時間)
 	
+	public ProductDTO() {
+		
+	}
+	
+	public ProductDTO(int productId, int categoryId, String productName, String productDescription, int price, String productImageUrl, boolean favorite) {
+		this.productId = productId;
+        this.categoryId = categoryId;
+        this.productName = productName;
+        this.productDescription = productDescription; 
+        this.price = price;
+        this.productImageUrl = productImageUrl;
+        this.favorite = favorite;
+	}
 	//各属性のgetter&setter
 	//DAOでListに格納予定
 	public int getProductId() {
