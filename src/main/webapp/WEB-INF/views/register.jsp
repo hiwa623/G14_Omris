@@ -62,7 +62,7 @@
     
     <hr>
     <a href="ManagerServlet">管理メニューに戻る</a>
-    <a href="index.jsp">管理メニューに戻る</a>
+    <a href="index.jsp">トップに戻る</a>
 
 </body>
 </html>

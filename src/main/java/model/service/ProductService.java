@@ -2,8 +2,7 @@ package model.service;
 
 import java.util.List;
 
-import dao.IProductDAO;
-import dao.ProductDAOMock;
+import dao.ProductDAO;
 import model.dto.ProductDTO;
 
 /**
@@ -13,8 +12,8 @@ import model.dto.ProductDTO;
 public class ProductService {
 
 	//DB接続用
-//	private ProductDAO productDAO = new ProductDAO();
-	private IProductDAO productDAO = new ProductDAOMock(); // ★ 仮データで動かすためのコード
+	private ProductDAO productDAO = new ProductDAO();
+//	private IProductDAO productDAO = new ProductDAOMock(); // ★ 仮データで動かすためのコード
 
 	
 	/**
