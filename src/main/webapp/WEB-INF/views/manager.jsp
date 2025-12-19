@@ -12,7 +12,7 @@
 	
 	    <ul>
 	        <li><a href="RegisterServlet">商品の新規登録</a></li>
-	        
+	        <li><a href="AdminLineupServlet">登録商品一覧</a></li>
 	        <li><a href="#">売上の確認（未実装）</a></li>
 	        <li><a href="#">在庫管理（未実装）</a></li>
 	    </ul>

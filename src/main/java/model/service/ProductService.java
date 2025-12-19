@@ -81,5 +81,20 @@ public class ProductService {
             return false;
         }
     }
+    
+    /**
+     * 削除メソッド
+     */
+    public void deleteProduct(int productId) {
+        productDAO.deleteProduct(productId);
+    }
+    
+    /**
+     * 商品情報を更新する
+     * @param product 更新内容を含むDTO
+     */
+    public void updateProduct(ProductDTO product) {
+        productDAO.updateProduct(product);
+    }
 }
 
