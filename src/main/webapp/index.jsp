@@ -23,5 +23,9 @@
         <h2>開発中</h2>
         <a href="OrderDetailServlet">注文詳細画面（作成中）</a>
     </div>
+    <div>
+    	<h2>ログイン画面</h2>
+    	<a href="#">ログイン画面単体</a>
+    </div>
 </body>
 </html>
