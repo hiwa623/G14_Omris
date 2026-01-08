@@ -6,20 +6,19 @@ import java.sql.SQLException;
 
 public class DBManager {
 	private static final String URL = 
-			"jdbc:oracle:thin:@//10.40.112.10:1521/dbsys.jz.jec.ac.jp";
-    private static final String USER = "jz240137";
-    private static final String PASS = "pass";
+			"jdbc:mysql://localhost:3306/sampleman";
+    private static final String USER = "root";
+    private static final String PASS = "";
 
     static {
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace();	
         }
     }
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);
     }
-    
 }

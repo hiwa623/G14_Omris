@@ -2,7 +2,9 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import dao.CategoryDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import model.dto.CategoryDTO;
 import model.dto.ProductDTO;
 import model.service.ProductService;
 import viewmodel.MenuRegisterViewModel;
@@ -28,19 +31,15 @@ public class RegisterServlet extends HttpServlet {
 	private static final String UPLOAD_DIR = "uploads"; // アップロード先ディレクトリ名
 	private ProductService productService = new ProductService();
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public RegisterServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		// カテゴリー一覧を取得してJSPに渡す
+		CategoryDAO categoryDAO = new CategoryDAO();
+	    List<CategoryDTO> categoryList = categoryDAO.findAll();
+	    request.setAttribute("categoryList", categoryList);
 		// 商品登録フォーム用のJSPへフォワード
         // パスは /WEB-INF/views/register.jsp と仮定
         request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
@@ -127,6 +126,11 @@ public class RegisterServlet extends HttpServlet {
             e.printStackTrace();
             nextView = "/WEB-INF/views/error.jsp"; 
         } finally {
+        	// 再表示（エラー時など）のためにカテゴリー一覧を再度取得
+        	CategoryDAO categoryDAO = new CategoryDAO();
+            List<CategoryDTO> categoryList = categoryDAO.findAll();
+            request.setAttribute("categoryList", categoryList);
+        	
             // DTOとViewModelをリクエストスコープに格納（再表示時にフォームの値を維持するためなど）
             request.setAttribute("product", productDTO);
             request.setAttribute("viewModel", viewModel);

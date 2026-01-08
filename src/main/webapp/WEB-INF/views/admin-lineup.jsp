@@ -14,36 +14,44 @@
         <button onclick="location.href='RegisterServlet'">追加</button>
     </div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>商品名</th>
-                <th>カテゴリー</th>
-                <th>値段</th>
-                <th>削除</th>
-                <th>編集</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="product" items="${productList}">
-                <tr>
-                    <td>${product.productName}</td>
-                    <td>${product.categoryId}</td>
-                    <td>${product.price}円</td>
-                    <td>
-                        <form action="DeleteProductServlet" method="post"
-                            onsubmit="return confirm('本当に削除しますか？');">
-                            <input type="hidden" name="productId"
-                                value="${product.productId}"> <input type="submit"
-                                value="🗑️">
-                        </form>
-                    </td>
-                    <td><a href="EditServlet?productId=${product.productId}">＞</a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+<table border="1">
+    <thead>
+        <tr>
+            <th>おすすめ</th>
+            <th>商品名</th>
+            <th>カテゴリー</th> <%-- IDから名前に変更 --%>
+            <th>値段</th>
+            <th>削除</th>
+            <th>編集</th>
+        </tr>
+    </thead>
+    <%-- tbodyタグをなくし、直接 tr を並べる --%>
+    <c:forEach var="product" items="${productList}">
+        <tr>
+            <td style="text-align: center;">
+                <%-- おすすめ(favorite)が true の場合に ★ を表示 --%>
+                <c:if test="${product.favorite}">
+                    <span style="color: orange; font-weight: bold;">★</span>
+                </c:if>
+            </td>
+            <td><c:out value="${product.productName}" /></td>
+            
+            <%-- categoryId ではなく、追加した categoryName を表示 --%>
+            <td><c:out value="${product.categoryName}" /></td>
+            
+            <td><c:out value="${product.price}" />円</td>
+            <td>
+                <form action="DeleteProductServlet" method="post"
+                    onsubmit="return confirm('本当に削除しますか？');">
+                    <input type="hidden" name="productId"
+                        value="${product.productId}"> 
+                    <input type="submit" value="🗑️">
+                </form>
+            </td>
+            <td><a href="EditServlet?productId=${product.productId}">＞</a></td>
+        </tr>
+    </c:forEach>
+</table>
 
     <p>
         <a href="ManagerServlet">管理メニューに戻る</a>

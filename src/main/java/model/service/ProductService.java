@@ -33,12 +33,8 @@ public class ProductService {
 	 * @return 該当するProductDTO、見つからない場合はnull
 	 */
 	public ProductDTO getProductById(int productId) {
-		// DAOのfindByIDメソッドが必要になります（DAOにはまだ実装されていませんが、利用を想定）
-		// return productDAO.findByID(productId); 
-
-		// DAOにfindByIDを実装していないため、findAllを使って一旦取得するダミー処理
-		// 実際にはDAOにfindByIDを実装すべき
-		return null;
+		// DAOのfindByIdを呼び出して、結果をそのまま返す
+	    return productDAO.findById(productId);
 	}
 	
 	/**
