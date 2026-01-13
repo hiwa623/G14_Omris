@@ -1,8 +1,9 @@
 package model.dto;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class OptionDTO {
+public class OptionDTO implements Serializable {
 
 	// DTOの属性
 	private int ID;				//オプションID

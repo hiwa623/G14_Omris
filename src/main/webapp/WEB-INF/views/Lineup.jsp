@@ -49,65 +49,54 @@ body {
 	</p>
 
 	<div class="product-list">
-        
-        <c:forEach var="product" items="${vm.productList}">
-            <c:if test="${product.favorite}">
-                <div class="product-card">
-                    
-                    <span class="favorite">★ おすすめ ★</span>
 
-                    <h2>${product.productName}</h2>
-
-                    <img
-                        src="${pageContext.request.contextPath}/${product.productImageUrl}"
-                        alt="${product.productName}" style="width: 100%; height: auto;">	
-
-                    <p>
-                        価格: <strong> <fmt:formatNumber value="${product.price}"
-                                type="currency" currencySymbol="¥" maxFractionDigits="0" />
-                        </strong>
-                    </p>
-
-                    <%-- ここの簡易説明はいらないのでコメントアウト --%>
-					<%-- <p>${product.productDescription}</p> --%>
-                    
-					<%-- <button onclick="alert('${product.productName} の詳細画面へ');">詳細を見る</button> --%>
-                </div>
-            </c:if>
+		<c:forEach var="product" items="${vm.productList}">
+			<c:if test="${product.favorite}">
+				<div class="product-card"
+					onclick="location.href='ProductDetailServlet?productId=${product.productId}'"
+					style="cursor: pointer;">
+					<span class="favorite">★ おすすめ ★</span>
+					<h2>${product.productName}</h2>
+					<img
+						src="${pageContext.request.contextPath}/${product.productImageUrl}"
+						alt="${product.productName}" style="width: 100%; height: auto;">
+					<p>
+						価格: <strong><fmt:formatNumber value="${product.price}" pattern="¥#,###" /></strong>
+					</p>
+					<button type="button">詳細を見る</button>
+				</div>
+			</c:if>
 		</c:forEach>
-        
-        <c:forEach var="product" items="${vm.productList}">
-            <c:if test="${!product.favorite}">
-                <div class="product-card">
-                    
-                    <%-- 通常商品は★おすすめ★のタグは表示しない --%>
 
-                    <h2>${product.productName}</h2>
-
-                    <img
-                        src="${pageContext.request.contextPath}/${product.productImageUrl}"
-                        alt="${product.productName}" style="width: 100%; height: auto;">	
-
-                    <p>
-                        価格: <strong> <fmt:formatNumber value="${product.price}"
-                                type="currency" currencySymbol="¥" maxFractionDigits="0" />
-                        </strong>
-                    </p>
-
-					<%-- ここの簡易説明はいらないのでコメントアウト --%>
-					<%-- <p>${product.productDescription}</p> --%>
-                    
-					<%-- <button onclick="alert('${product.productName} の詳細画面へ');">詳細を見る</button> --%>
-                    
-                </div>
-            </c:if>
+		<c:forEach var="product" items="${vm.productList}">
+			<c:if test="${!product.favorite}">
+				<div class="product-card"
+					onclick="location.href='ProductDetailServlet?productId=${product.productId}'"
+					style="cursor: pointer;">
+					<h2>${product.productName}</h2>
+					<img
+						src="${pageContext.request.contextPath}/${product.productImageUrl}"
+						alt="${product.productName}" style="width: 100%; height: auto;">
+					<p>
+						価格: <strong><fmt:formatNumber value="${product.price}" pattern="¥#,###" /></strong>
+					</p>
+					<button type="button">詳細を見る</button>
+				</div>
+			</c:if>
 		</c:forEach>
-        
+
 	</div>
 	<a href="index.jsp">管理メニューに戻る</a>
+	<%-- 商品一覧画面からカート画面へ移動するためのボタン --%>
+	<div style="margin: 10px;">
+		<a href="${pageContext.request.contextPath}/CartServlet"
+			style="text-decoration: none;">
+			<button type="button">🛒 カートの中身を見る</button>
+		</a>
+	</div>
 	<%-- 実際の本番環境ではこのデバッグ情報は削除します --%>
 	<h3>デバッグ情報</h3>
 	<p>リクエストスコープのViewModelキー: ${vm}</p>
-	<p>最初の商品のID: ${vm.productList[0].productId}</p>
+
 </body>
 </html>

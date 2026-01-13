@@ -1,8 +1,9 @@
 package model.dto;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class CategoryDTO {
+public class CategoryDTO implements Serializable {
 	
 	//DTOの属性
 	private int categoryId;			//カテゴリーID
