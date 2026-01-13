@@ -55,10 +55,8 @@ public class ProductDAO implements IProductDAO {
 	    "LEFT JOIN category c ON p.category_id = c.id " +
 	    "WHERE p.product_id = ?";
 
-	// 商品更新
 	private static final String UPDATE_PRODUCT_SQL = 
-	    "UPDATE product SET category_id = ?, product_name = ?, product_description = ?, price = ?, product_image_url = ?, favorite = ?, updated_at = CURRENT_TIMESTAMP " +
-	    "WHERE product_id = ?";
+		    "UPDATE product SET category_id = ?, product_name = ?, product_description = ?, price = ?, product_image_url = ?, favorite = ?, updated_at = ? WHERE product_id = ?";
 
 	// 商品削除
 	private static final String DELETE_PRODUCT_SQL = "DELETE FROM product WHERE product_id = ?";
@@ -132,16 +130,14 @@ public class ProductDAO implements IProductDAO {
         try (Connection conn = DBManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_PRODUCT_SQL)) {
 
-            Timestamp now = new Timestamp(System.currentTimeMillis());
-
             ps.setInt(1, productDTO.getCategoryId());
             ps.setString(2, productDTO.getProductName());
             ps.setString(3, productDTO.getProductDescription());
             ps.setInt(4, productDTO.getPrice());
             ps.setString(5, productDTO.getProductImageUrl());
             ps.setInt(6, productDTO.isFavorite() ? 1 : 0);
-            ps.setTimestamp(7, now); // updated_at
-            ps.setInt(8, productDTO.getProductId()); // WHERE句
+            ps.setTimestamp(7, productDTO.getUpdateAt()); // 7番目
+            ps.setInt(8, productDTO.getProductId());
 
             result = ps.executeUpdate();
         } catch (SQLException e) {
