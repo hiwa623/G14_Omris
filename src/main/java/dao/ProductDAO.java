@@ -12,30 +12,58 @@ import model.dto.ProductDTO;
 
 public class ProductDAO implements IProductDAO {
 
-    // SQL定義 (MySQL用に調整)
+//    // SQL定義 (MySQL用に調整)
+//	private static final String SELECT_ALL_PRODUCTS_SQL = 
+//		    "SELECT p.*, c.name AS category_name " +
+//		    "FROM product p " +
+//		    "LEFT JOIN category c ON p.category_id = c.id " +
+//		    "ORDER BY p.product_id";
+//
+//    // 【修正箇所】MySQLはAUTO_INCREMENTなので、product_idとシーケンス(NEXTVAL)は記述しません
+//    private static final String INSERT_PRODUCT_SQL = 
+//            "INSERT INTO product (category_id, product_name, product_description, price, product_image_url, favorite, created_at, updated_at) " +
+//            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+//
+//    private static final String SELECT_PRODUCT_BY_ID_SQL = 
+//    	    "SELECT p.*, c.name AS category_name " +
+//    	    "FROM product p " +
+//    	    "LEFT JOIN category c ON p.category_id = c.id " +
+//    	    "WHERE p.product_id = ?";
+//
+//    private static final String UPDATE_PRODUCT_SQL = 
+//            "UPDATE product SET category_id = ?, product_name = ?, product_description = ?, price = ?, product_image_url = ?, favorite = ?, updated_at = ? " +
+//            "WHERE product_id = ?";
+//
+//    private static final String DELETE_PRODUCT_SQL = "DELETE FROM product WHERE product_id = ?";
+
+	// 全商品取得（カテゴリ名も結合）
 	private static final String SELECT_ALL_PRODUCTS_SQL = 
-		    "SELECT p.*, c.name AS category_name " +
-		    "FROM product p " +
-		    "LEFT JOIN category c ON p.category_id = c.id " +
-		    "ORDER BY p.product_id";
+	    "SELECT p.*, c.name AS category_name " +
+	    "FROM product p " +
+	    "LEFT JOIN category c ON p.category_id = c.id " +
+	    "ORDER BY p.product_id";
 
-    // 【修正箇所】MySQLはAUTO_INCREMENTなので、product_idとシーケンス(NEXTVAL)は記述しません
-    private static final String INSERT_PRODUCT_SQL = 
-            "INSERT INTO product (category_id, product_name, product_description, price, product_image_url, favorite, created_at, updated_at) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	// 商品挿入 (favoriteの綴りはテーブル定義に合わせる)
+	private static final String INSERT_PRODUCT_SQL = 
+		    "INSERT INTO product (category_id, product_name, product_description, price, product_image_url, favorite, created_at, updated_at) " +
+		    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String SELECT_PRODUCT_BY_ID_SQL = 
-    	    "SELECT p.*, c.name AS category_name " +
-    	    "FROM product p " +
-    	    "LEFT JOIN category c ON p.category_id = c.id " +
-    	    "WHERE p.product_id = ?";
+	// IDで商品取得
+	private static final String SELECT_PRODUCT_BY_ID_SQL = 
+	    "SELECT p.*, c.name AS category_name " +
+	    "FROM product p " +
+	    "LEFT JOIN category c ON p.category_id = c.id " +
+	    "WHERE p.product_id = ?";
 
-    private static final String UPDATE_PRODUCT_SQL = 
-            "UPDATE product SET category_id = ?, product_name = ?, product_description = ?, price = ?, product_image_url = ?, favorite = ?, updated_at = ? " +
-            "WHERE product_id = ?";
+	// 商品更新
+	private static final String UPDATE_PRODUCT_SQL = 
+	    "UPDATE product SET category_id = ?, product_name = ?, product_description = ?, price = ?, product_image_url = ?, favorite = ?, updated_at = CURRENT_TIMESTAMP " +
+	    "WHERE product_id = ?";
 
-    private static final String DELETE_PRODUCT_SQL = "DELETE FROM product WHERE product_id = ?";
-
+	// 商品削除
+	private static final String DELETE_PRODUCT_SQL = "DELETE FROM product WHERE product_id = ?";
+    
+    
     @Override
     public List<ProductDTO> findAll() {
         List<ProductDTO> productList = new ArrayList<>();
