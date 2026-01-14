@@ -8,6 +8,7 @@ import dao.DBManager;
 import dao.OrderDAO;
 import dao.OrderDetailDAO;
 import model.dto.CartItemDTO;
+import model.dto.OrderHistoryDTO;
 
 /**
  * OrderService
@@ -68,5 +69,14 @@ public class OrderService {
                 e.printStackTrace();
             }
         }
+    }
+    
+    /**
+     * 全ての注文履歴を取得する
+     * @return 注文履歴DTOのリスト
+     */
+    public List<OrderHistoryDTO> getOrderHistory() {
+        // 注文日時の新しい順に全件取得
+        return orderDAO.findAllOrders();
     }
 }
