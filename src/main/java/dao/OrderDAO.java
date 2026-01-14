@@ -7,9 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class OrderDAO {
+//	MySQL形式
+//    private static final String INSERT_ORDER_SQL = 
+//        "INSERT INTO orders (order_date, total_price) VALUES (NOW(), ?)";
     
+ // Oracle形式
     private static final String INSERT_ORDER_SQL = 
-        "INSERT INTO orders (order_date, total_price) VALUES (NOW(), ?)";
+        "INSERT INTO orders (order_date, total_price) VALUES (SYSDATE, ?)";
 
     public int insertOrder(Connection conn, int totalPrice) throws SQLException {
         // RETURN_GENERATED_KEYS を指定して、自動採番された ID を取得可能にする
