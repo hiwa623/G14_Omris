@@ -95,7 +95,7 @@ public class EditServlet extends HttpServlet {
                     System.out.println("Directory created: " + uploadPath);
                 }
                 
-                filePart.write(uploadPath + "/" + fileName);	filePart.write(uploadPath + "/" + fileName);
+                filePart.write(uploadPath + "/" + fileName);	//File.separatorを使うとより安全
                 productImageUrl = "uploads/" + fileName;
             }
 
