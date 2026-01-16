@@ -47,7 +47,7 @@ body {
 	<p>
 		全商品件数: <strong>${vm.totalItemCount}</strong> 件
 	</p>
-
+	<a href="index.jsp">管理メニューに戻る</a>
 	<div class="product-list">
 
 		<c:forEach var="product" items="${vm.productList}">
@@ -87,6 +87,7 @@ body {
 
 	</div>
 	<a href="index.jsp">管理メニューに戻る</a>
+	<li><a href="OrderHistoryServlet">注文履歴の確認</a><span class="new-tag">NEW</span></li>
 	<%-- 商品一覧画面からカート画面へ移動するためのボタン --%>
 	<div style="margin: 10px;">
 		<a href="${pageContext.request.contextPath}/CartServlet"

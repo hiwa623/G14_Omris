@@ -27,9 +27,9 @@ public class CartServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// --- 追加：商品IDが送られてきている場合のみ追加処理を行う ---
+		//送られてきた商品IDを取得
 		String productIdStr = request.getParameter("productId");
-		// 数量を取得するための文字列を受け取る
+		//数量を取得するための文字列を取得
 		String quantityStr = request.getParameter("quantity");
 
 		// セッションを取得（存在しなければ新規作成）
@@ -87,7 +87,7 @@ public class CartServlet extends HttpServlet {
 		}
 
 		if (isAddedAction) {
-			// 【新設】商品追加後の中間画面へ
+			//商品追加後の中間画面へ
 			viewmodel.CartAddedViewModel addedVm = new viewmodel.CartAddedViewModel();
 			addedVm.setLastAddedProduct(lastProduct);
 			addedVm.setAddedQuantity(lastQuantity);
@@ -108,6 +108,7 @@ public class CartServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// 削除などのリクエストパラメータを判定
+		//cart.jspからの<input type="hidden～>からの値を取得
 		String action = request.getParameter("action");
 		String productIdStr = request.getParameter("productId");
 

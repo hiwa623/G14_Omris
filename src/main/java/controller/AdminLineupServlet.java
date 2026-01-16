@@ -17,6 +17,7 @@ import model.service.ProductService;
 @WebServlet("/AdminLineupServlet")
 public class AdminLineupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	//店長管理画面登録商品一覧
 	private ProductService productService = new ProductService();
 
 	/**

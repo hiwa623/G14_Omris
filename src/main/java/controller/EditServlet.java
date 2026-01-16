@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -85,7 +86,16 @@ public class EditServlet extends HttpServlet {
             if (fileName != null && !fileName.isEmpty()) {
                 // 新しい画像が選択されている場合のみ上書き（保存処理はRegisterと同様に必要）
                 String uploadPath = getServletContext().getRealPath("/uploads");
-                filePart.write(uploadPath + "/" + fileName);
+                
+                
+                //フォルダが存在しない場合に作成する処理
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs(); // 中間ディレクトリを含めて作成
+                    System.out.println("Directory created: " + uploadPath);
+                }
+                
+                filePart.write(uploadPath + "/" + fileName);	filePart.write(uploadPath + "/" + fileName);
                 productImageUrl = "uploads/" + fileName;
             }
 
