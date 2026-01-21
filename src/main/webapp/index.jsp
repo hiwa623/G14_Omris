@@ -11,7 +11,7 @@
 
     <div class="menu-box">
         <h2>お客様はこちら</h2>
-        <a href="LineupServlet">商品一覧を見る（注文する）</a>
+        <a href="StartOrderServlet">商品一覧を見る（注文する）</a>
     </div>
 
     <div class="menu-box manager">
@@ -21,7 +21,7 @@
 
     <div class="menu-box">
         <h2>開発中</h2>
-        <a href="OrderDetailServlet">注文詳細画面（作成中）</a>
+        <a href="OrderDetailServlet">キッチン、ホール画面</a>
     </div>
     <div>
     	<h2>ログイン画面</h2>

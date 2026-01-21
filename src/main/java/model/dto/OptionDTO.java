@@ -6,20 +6,20 @@ import java.sql.Timestamp;
 public class OptionDTO implements Serializable {
 
 	// DTOの属性
-	private int ID;				//オプションID
+	private int id;				//オプションID
     private String optionName;	//オプション名
-    private int price;			//オプション価格
-    private int max;			//オプション条件
+    private int optionPrice;			//オプション価格
+    private int optionLimit;			//オプション条件
     
     private Timestamp createdAt;		//作成時間
     private Timestamp updatedAt;		//変更時間
     
-  //各属性のgetter&setter
-	public int getID() {
-		return ID;
+    //各属性のgetter&setter
+	public int getId() {
+		return id;
 	}
-	public void setID(int iD) {
-		ID = iD;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getOptionName() {
 		return optionName;
@@ -27,17 +27,17 @@ public class OptionDTO implements Serializable {
 	public void setOptionName(String optionName) {
 		this.optionName = optionName;
 	}
-	public int getPrice() {
-		return price;
+	public int getOptionPrice() {
+		return optionPrice;
 	}
-	public void setPrice(int price) {
-		this.price = price;
+	public void setOptionPrice(int optionPrice) {
+		this.optionPrice = optionPrice;
 	}
-	public int getMax() {
-		return max;
+	public int getOptionLimit() {
+		return optionLimit;
 	}
-	public void setMax(int max) {
-		this.max = max;
+	public void setOptionLimit(int optionLimit) {
+		this.optionLimit = optionLimit;
 	}
 	public Timestamp getCreatedAt() {
 		return createdAt;

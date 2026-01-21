@@ -28,12 +28,18 @@ public class OrderServlet extends HttpServlet {
 		HttpSession session = request.getSession();
         List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
 
+        int tableId = 1; 
+        String tableParam = request.getParameter("tableId");
+        if (tableParam != null) {
+            tableId = Integer.parseInt(tableParam);
+        }
+        
         OrderViewModel vm = new OrderViewModel();
 
         if (cart == null || cart.isEmpty()) {
             vm.setSuccess(false);
             vm.setMessage("カートが空です。");
-        } else if (orderService.checkout(cart)) {
+        } else if (orderService.checkout(cart, tableId)) {
             vm.setSuccess(true);
             vm.setMessage("ご注文ありがとうございました！");
             session.removeAttribute("cart");

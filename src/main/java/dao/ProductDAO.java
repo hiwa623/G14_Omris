@@ -19,7 +19,7 @@ public class ProductDAO implements IProductDAO {
 	//		    "LEFT JOIN category c ON p.category_id = c.id " +
 	//		    "ORDER BY p.product_id";
 	//
-	//    // 【修正箇所】MySQLはAUTO_INCREMENTなので、product_idとシーケンス(NEXTVAL)は記述しません
+	//    //MySQLはAUTO_INCREMENTなので、product_idとシーケンス(NEXTVAL)は記述しません
 	//    private static final String INSERT_PRODUCT_SQL = 
 	//            "INSERT INTO product (category_id, product_name, product_description, price, product_image_url, favorite, created_at, updated_at) " +
 	//            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

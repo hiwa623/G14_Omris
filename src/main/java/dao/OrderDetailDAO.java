@@ -2,37 +2,43 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet; // 追加
 import java.sql.SQLException;
 
 import model.dto.CartItemDTO;
 
 public class OrderDetailDAO {
-	// SQL文の定義
+    // 【修正】新設計に合わせて product_status_id（初期値 'NEW'）を追加
     private static final String INSERT_DETAIL_SQL = 
-        "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+        "INSERT INTO order_details (order_id, product_id, product_status_id, quantity, price) " +
+        "VALUES (?, ?, 'NEW', ?, ?)";
     
     /**
-     * 注文明細を登録する。
-     * Service側でトランザクションを制御するため、Connectionを受け取る。
-     * * @param conn データベース接続
-     * @param orderId 親となる注文のID
-     * @param item カート内の1つのアイテム
-     * @throws SQLException データベースエラー
+     * 注文明細を登録し、生成されたIDを返す。
      */
-    public void insertOrderDetail(Connection conn, int orderId, CartItemDTO item) throws SQLException {
+    public int insertOrderDetail(Connection conn, int orderId, CartItemDTO item) throws SQLException {
+        // 【重要】生成された detail_id を取得するためにカラム名を指定
+        String[] generatedColumns = {"detail_id"}; 
         
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_DETAIL_SQL)) {
-            // パラメータのセット
+        try (PreparedStatement ps = conn.prepareStatement(INSERT_DETAIL_SQL, generatedColumns)) {
             ps.setInt(1, orderId);
             ps.setInt(2, item.getProduct().getProductId());
             ps.setInt(3, item.getQuantity());
             ps.setInt(4, item.getProduct().getPrice());
 
-            // 実行
             int result = ps.executeUpdate();
             
             if (result == 0) {
                 throw new SQLException("明細の登録に失敗しました。");
+            }
+
+            // --- 【追加】生成された detail_id を取得して返す ---
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                } else {
+                    throw new SQLException("明細IDの取得に失敗しました。");
+                }
             }
         }
     }

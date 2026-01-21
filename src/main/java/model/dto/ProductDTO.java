@@ -16,10 +16,9 @@ public class ProductDTO implements Serializable {
 	private boolean favorite; // おすすめ商品判定 	(DB: おすすめ選択)
 
 	private Timestamp createdAt; // 作成時間 			(DB: 作成時間)
-	private Timestamp updateAt; // 更新時間 			(DB: 更新時間)
+	private Timestamp updatedAt; // 更新時間 			(DB: 更新時間)
 
 	public ProductDTO() {
-
 	}
 
 	public ProductDTO(int productId, int categoryId, String productName, String productDescription, int price,
@@ -99,12 +98,12 @@ public class ProductDTO implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	public Timestamp getUpdateAt() {
-		return updateAt;
+	public Timestamp getUpdatedAt() {
+		return updatedAt;
 	}
 
-	public void setUpdateAt(Timestamp updateAt) {
-		this.updateAt = updateAt;
+	public void setUpdateAt(Timestamp updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 	
 	public String getCategoryName() {

@@ -36,7 +36,7 @@ public class EditServlet extends HttpServlet {
         
         // IDが送られてこなかった場合の簡易チェック
         if (idStr == null || idStr.isEmpty()) {
-            response.sendRedirect("ManagerServlet"); // 【修正】一覧へのパス
+            response.sendRedirect("ManagerServlet"); //一覧へのパス
             return;
         }
 
