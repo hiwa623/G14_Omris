@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.dto.CartItemDTO;
-import model.dto.OptionDTO;
+import viewmodel.CartViewModel;
 
 @WebServlet("/CartServlet")
 public class CartServlet extends HttpServlet {
@@ -24,27 +24,12 @@ public class CartServlet extends HttpServlet {
         @SuppressWarnings("unchecked")
         List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
         
-        // 2. 合計金額を計算
-        int totalAmount = 0;
-        if (cart != null) {
-            for (CartItemDTO item : cart) {
-                // 商品の小計 (単価 * 数量)
-                int subTotal = item.getProduct().getPrice() * item.getQuantity();
-                
-                // オプション料金の加算 (オプション単価 * 数量 と仮定)
-                // CartItemDTOにオプションリスト(List<OptionDTO>)が入っている前提です
-                if (item.getOptionList() != null) {
-                    for (OptionDTO opt : item.getOptionList()) {
-                        subTotal += opt.getOptionPrice() * item.getQuantity();
-                    }
-                }
-                
-                totalAmount += subTotal;
-            }
-        }
-        
-        // 3. JSPに渡す（カートリストはセッションにあるので、合計金額だけ渡せばOK）
-        request.setAttribute("totalAmount", totalAmount);
+     // ViewModelの作成
+        CartViewModel vm = new CartViewModel();
+        vm.setCartItems(cart);
+
+        // ViewModel だけをリクエストスコープに入れる
+        request.setAttribute("vm", vm);
         
         // 4. カート画面へフォワード
         request.getRequestDispatcher("/WEB-INF/views/cart_list.jsp").forward(request, response);

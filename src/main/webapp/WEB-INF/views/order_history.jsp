@@ -39,11 +39,11 @@
 <div class="container">
     <h1>注文履歴</h1>
     
-    <c:if test="${empty historyList}">
+    <c:if test="${empty vm.historyList}">
         <p style="text-align:center; padding: 20px;">まだ注文履歴がありません。</p>
     </c:if>
 
-    <c:forEach var="order" items="${historyList}">
+    <c:forEach var="order" items="${vm.historyList}">
         <div class="order-card">
             <div class="order-header">
                 <span><fmt:formatDate value="${order.orderDate}" pattern="HH:mm" /> 注文</span>

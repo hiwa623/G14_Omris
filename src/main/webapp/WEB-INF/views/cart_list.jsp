@@ -44,7 +44,7 @@
     <p>テーブル番号: <strong>${sessionScope.tableId}</strong> / 人数: <strong>${sessionScope.customerCount}</strong>名</p>
 
     <c:choose>
-        <c:when test="${empty sessionScope.cart}">
+        <c:when test="${empty vm.cartItems}">
             <p style="text-align:center; padding: 30px;">カートに商品が入っていません。</p>
             <div style="text-align:center;">
                  <a href="MenuListServlet" class="btn btn-back" style="display:inline-block; width:200px;">メニューに戻る</a>
@@ -64,7 +64,7 @@
                 </thead>
                 <tbody>
                     <%-- varStatus="status" でループのインデックス(0,1,2...)を取得 --%>
-                    <c:forEach var="item" items="${sessionScope.cart}" varStatus="status">
+                    <c:forEach var="item" items="${vm.cartItems}" varStatus="status">
                         <tr>
                             <td>
                                 <strong>${item.product.productName}</strong>
@@ -80,7 +80,7 @@
                                     <input type="hidden" name="index" value="${status.index}">
                                     
                                     <input type="number" name="quantity" value="${item.quantity}" min="1" max="99" class="qty-input">
-                                    <button type="submit" class="btn-update">変更</button>
+                                    <butto	n type="submit" class="btn-update">変更</button>
                                 </form>
                             </td>
                             
@@ -105,7 +105,7 @@
             </table>
 
             <div class="total-area">
-                合計金額: <span class="total-price">¥ <fmt:formatNumber value="${totalAmount}" /></span>
+                合計金額: 合計金額: <span class="total-price">¥ <fmt:formatNumber value="${vm.totalPrice}" /></span>
             </div>
             
             <form action="PlaceOrderServlet" method="post">

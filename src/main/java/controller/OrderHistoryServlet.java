@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.dto.OrderHistoryDTO;
 import model.service.CustomerService;
+import viewmodel.OrderHistoryViewModel;
 
 /**
  * Servlet implementation class OrderHistoryServlet
@@ -41,8 +42,16 @@ public class OrderHistoryServlet extends HttpServlet {
 		// ★ここでさっき作ったDAOのメソッドが間接的に呼ばれます
 		List<OrderHistoryDTO> historyList = customerService.getOrderHistory(tableId);
 
-		// 画面にデータを渡す
-		request.setAttribute("historyList", historyList);
+//		ViewModelを使ってデータを渡す
+        OrderHistoryViewModel vm = new OrderHistoryViewModel();
+        vm.setHistoryList(historyList);
+        
+        if (historyList == null || historyList.isEmpty()) {
+            vm.setMessage("まだ注文履歴がありません。");
+        }
+        
+     // ViewModelをリクエストスコープにセット
+        request.setAttribute("vm", vm);
 
 		// 画面を表示する
 		request.getRequestDispatcher("/WEB-INF/views/order_history.jsp").forward(request, response);
