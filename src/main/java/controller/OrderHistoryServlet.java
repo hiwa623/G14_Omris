@@ -8,9 +8,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.dto.OrderHistoryDTO;
-import model.service.OrderService;
-import viewmodel.OrderHistoryViewModel;
+import model.service.CustomerService;
 
 /**
  * Servlet implementation class OrderHistoryServlet
@@ -18,32 +18,41 @@ import viewmodel.OrderHistoryViewModel;
 @WebServlet("/OrderHistoryServlet")
 public class OrderHistoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private OrderService orderService = new OrderService();
-	
+
+	// サービスを呼び出す準備
+	private CustomerService customerService = new CustomerService();
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 1. Serviceからデータを取得
-        List<OrderHistoryDTO> historyList = orderService.getOrderHistory();
-        
-        // 2. ViewModelに詰める
-        OrderHistoryViewModel vm = new OrderHistoryViewModel();
-        vm.setHistoryList(historyList);
-        
-        if (historyList.isEmpty()) {
-            vm.setMessage("注文履歴はまだありません。");
-        }
-        
-        // 3. JSPへフォワード
-        request.setAttribute("vm", vm);
-        request.getRequestDispatcher("/WEB-INF/views/orderhistory.jsp").forward(request, response);
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+
+		// セッションからテーブルIDを取得（ログイン的な処理）
+		Integer tableId = (Integer) session.getAttribute("tableId");
+
+		// セッション切れ対策（テーブルIDがないならトップへ戻す）
+		if (tableId == null) {
+			response.sendRedirect("index.jsp");
+			return;
+		}
+
+		// ★ここでさっき作ったDAOのメソッドが間接的に呼ばれます
+		List<OrderHistoryDTO> historyList = customerService.getOrderHistory(tableId);
+
+		// 画面にデータを渡す
+		request.setAttribute("historyList", historyList);
+
+		// 画面を表示する
+		request.getRequestDispatcher("/WEB-INF/views/order_history.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

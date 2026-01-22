@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.dto.CartItemDTO;
+import model.dto.OptionDTO;
 import model.dto.ProductDTO;
 import model.service.CustomerService;
 
@@ -22,50 +23,66 @@ public class AddtoCartServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        request.setCharacterEncoding("UTF-8");
+request.setCharacterEncoding("UTF-8");
         
         try {
-            // 1. パラメータ取得
-            int productId = Integer.parseInt(request.getParameter("productId"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            
-            // チェックボックスは複数値なので getParameterValues で取得（選ばれてない場合はnull）
-            String[] optionIdStrs = request.getParameterValues("optionIds");
-            List<Integer> optionIds = new ArrayList<>();
-            if (optionIdStrs != null) {
-                for (String s : optionIdStrs) {
-                    optionIds.add(Integer.parseInt(s));
-                }
-            }
+            // 1. 画面からの入力値を取得
+            String productIdStr = request.getParameter("productId");
+            String quantityStr = request.getParameter("quantity");
+            String[] optionIdStrs = request.getParameterValues("optionIds"); // チェックボックス
 
-            // 2. 商品情報取得
-            ProductDTO product = customerService.getProductById(productId);
-            
-            if (product != null) {
-                // 3. セッションカート取得
-                HttpSession session = request.getSession();
-                @SuppressWarnings("unchecked")
-                List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
-                if (cart == null) {
-                    cart = new ArrayList<>();
-                    session.setAttribute("cart", cart);
+            if (productIdStr != null && quantityStr != null) {
+                int productId = Integer.parseInt(productIdStr);
+                int quantity = Integer.parseInt(quantityStr);
+                
+                // 2. 商品情報を取得
+                ProductDTO product = customerService.getProductById(productId);
+                
+                // 3. 選択されたオプション情報をリスト化する
+                List<OptionDTO> selectedOptions = new ArrayList<>();
+                
+                // チェックボックスが一つでも選ばれていれば処理
+                if (optionIdStrs != null) {
+                    // 全オプション情報を取得（ここからID一致を探す）
+                    List<OptionDTO> allOptions = customerService.getOptionList();
+                    
+                    for (String idStr : optionIdStrs) {
+                        int id = Integer.parseInt(idStr);
+                        // IDが一致するOptionDTOを探してリストに追加
+                        for (OptionDTO opt : allOptions) {
+                            if (opt.getId() == id) { 
+                                selectedOptions.add(opt);
+                                break; 
+                            }
+                        }
+                    }
                 }
                 
-                // 4. カートアイテム作成
-                CartItemDTO newItem = new CartItemDTO(product, quantity);
-                newItem.setOptionIds(optionIds); // オプションをセット
-                
-                // ★本来は「同じ商品で同じオプションなら合算」するロジックを入れると親切ですが
-                // 簡易化のため、毎回別レコードとして追加します
-                cart.add(newItem);
+                if (product != null) {
+                    HttpSession session = request.getSession();
+                    @SuppressWarnings("unchecked")
+                    List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+                    
+                    if (cart == null) {
+                        cart = new ArrayList<>();
+                        session.setAttribute("cart", cart);
+                    }
+                    
+                    // 4. カートアイテム作成
+                    CartItemDTO newItem = new CartItemDTO(product, quantity);
+                    // 【重要】検索したオプション情報(OptionDTOのリスト)をセット
+                    newItem.setOptionList(selectedOptions);
+                    
+                    cart.add(newItem);
+                }
             }
             
-            // 5. 【変更】選択画面（add_success.jsp）へフォワード
+            // 成功画面へ
             request.getRequestDispatcher("/WEB-INF/views/add_success.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("menu");
+            response.sendRedirect("MenuListServlet");
         }
     }
 }

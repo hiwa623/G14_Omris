@@ -180,7 +180,12 @@ header {
 	</div>
 
 	<div class="footer-bar">
-		<a href="OrderConfirmServlet" class="cart-btn">注文確認へ進む</a>
+		<a href="CartServlet" class="cart-btn">注文確認へ進む</a>
 	</div>
+	<div style="text-align: right; margin-bottom: 10px;">
+    <a href="OrderHistoryServlet" style="background:#3498db; color:white; padding:8px 15px; text-decoration:none; border-radius:5px; font-size:0.9rem;">
+        注文履歴を見る
+    </a>
+</div>
 </body>
 </html>

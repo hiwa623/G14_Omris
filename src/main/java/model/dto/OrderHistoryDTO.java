@@ -9,7 +9,10 @@ public class OrderHistoryDTO implements Serializable{
 	private Timestamp orderDate;
 	private int totalPrice;
 	// この注文に紐づく明細リストを持たせる（1対多の構造）
-	private List<OrderDetailDTO> details;
+	private List<HistoryDetailDTO> details;
+	// 【修正】ステータス用フィールド
+    private String statusId;    // 'NEW', 'COOKING', 'SERVED'
+    private String statusName;  // '未調理', '調理中', '提供済み'
 
 	// Getter & Setter
 	public int getOrderId() {
@@ -36,11 +39,11 @@ public class OrderHistoryDTO implements Serializable{
 		this.totalPrice = totalPrice;
 	}
 
-	public List<OrderDetailDTO> getDetails() {
+	public List<HistoryDetailDTO> getDetails() {
 		return details;
 	}
 
-	public void setDetails(List<OrderDetailDTO> details) {
+	public void setDetails(List<HistoryDetailDTO> details) {
 		this.details = details;
 	}
 }
