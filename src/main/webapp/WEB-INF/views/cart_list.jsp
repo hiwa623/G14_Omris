@@ -105,7 +105,7 @@
             </table>
 
             <div class="total-area">
-                合計金額: 合計金額: <span class="total-price">¥ <fmt:formatNumber value="${vm.totalPrice}" /></span>
+                合計金額: <span class="total-price">¥ <fmt:formatNumber value="${vm.totalPrice}" /></span>
             </div>
             
             <form action="PlaceOrderServlet" method="post">
