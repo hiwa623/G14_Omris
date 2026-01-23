@@ -18,7 +18,8 @@ import model.dto.OptionDTO;
 import model.dto.ProductDTO;
 import model.service.CustomerService;
 import model.service.ProductService;
-import viewmodel.MenuRegisterViewModel;
+import viewmodel.LineupViewModel; // ★重要: 一覧画面用のViewModel
+import viewmodel.MenuRegisterViewModel; // 登録画面用のViewModel
 
 @WebServlet("/RegisterServlet")
 @MultipartConfig(
@@ -31,47 +32,46 @@ public class RegisterServlet extends HttpServlet {
     private static final String UPLOAD_DIR = "uploads"; 
 
     private ProductService productService = new ProductService();
+    // カテゴリ一覧取得などで使用
     private CustomerService customerService = new CustomerService();
 
-    // --- 画面表示 ---
+    // --- 画面表示 (GET) ---
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	// 1. カテゴリ一覧取得（既存）
+        // 1. カテゴリ一覧取得
         CategoryDAO categoryDAO = new CategoryDAO();
         List<CategoryDTO> categoryList = categoryDAO.findAll();
         
-        // 2. ★追加: オプション一覧取得
+        // 2. オプション一覧取得
         List<OptionDTO> optionList = productService.getOptionList();
 
-        // 3. ViewModel作成
+        // 3. ViewModel作成 (登録画面用)
         MenuRegisterViewModel vm = new MenuRegisterViewModel();
-        vm.setCategoryList(categoryList); // ←もしViewModelにCategoryListも持たせる修正をした場合
-        // もしくは request.setAttribute("categoryList", categoryList); のままならそのままでOK
-        
-        // ★追加: ViewModelにオプションリストをセット
+        vm.setCategoryList(categoryList);
         vm.setOptionList(optionList);
 
         // 4. リクエストスコープへセット
         request.setAttribute("vm", vm);
-        // (JSP側で ${categoryList} を使っている場合は以下も残す)
-        request.setAttribute("categoryList", categoryList);
-
+        
+        // 登録画面へフォワード
         request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
     }
 
-    // --- 登録処理 ---
+    // --- 登録処理 (POST) ---
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        MenuRegisterViewModel vm = new MenuRegisterViewModel();
-        String nextView = null; // ★初期値がnull
+        
+        // エラー時再表示用のViewModel
+        MenuRegisterViewModel registerVm = new MenuRegisterViewModel();
+
         try {
-            // 基本情報の取得
+            // 1. 入力値の取得
             String productName = request.getParameter("name");
             String priceStr = request.getParameter("price");
             String description = request.getParameter("description");
             String categoryIdStr = request.getParameter("categoryId");
             boolean isRecommended = request.getParameter("recommend") != null;
 
-            // ★追加: チェックボックスで選ばれたオプションID配列を取得
+            // チェックボックスで選ばれたオプションID配列を取得
             String[] optionIdStrs = request.getParameterValues("optionIds");
             List<Integer> selectedOptionIds = new ArrayList<>();
             if (optionIdStrs != null) {
@@ -80,10 +80,10 @@ public class RegisterServlet extends HttpServlet {
                 }
             }
 
-            // 画像処理（省略：前回と同じコード）
+            // 2. 画像処理
             String productImageUrl = null;
             Part filePart = request.getPart("file");
-            if (filePart != null && filePart.getSize() > 0) {
+            if (filePart != null && filePart.getSize() > 0 && filePart.getSubmittedFileName().length() > 0) {
                 String fileName = getFileName(filePart);
                 String uploadPath = getServletContext().getRealPath("/" + UPLOAD_DIR);
                 File uploadDir = new File(uploadPath);
@@ -92,7 +92,7 @@ public class RegisterServlet extends HttpServlet {
                 productImageUrl = UPLOAD_DIR + "/" + fileName;
             }
 
-            // DTO作成
+            // 3. DTO作成
             int price = Integer.parseInt(priceStr);
             int categoryId = Integer.parseInt(categoryIdStr);
 
@@ -104,41 +104,48 @@ public class RegisterServlet extends HttpServlet {
             product.setProductImageUrl(productImageUrl);
             product.setFavorite(isRecommended);
 
-            // ★重要: Serviceへ商品と「紐付けたいオプションIDリスト」を渡す
-            // ※ProductService側にこのメソッド(registerProductWithOptionsなど)を作る必要があります
+            // 4. 登録実行 (Service)
+            // ProductService.java で定義されているメソッドを呼び出し
             productService.registerProduct(product, selectedOptionIds);
             
-            vm.setSuccess(true);
-            vm.setMessage("商品とオプション設定の登録が完了しました！");
+            // ---------------------------------------------------------
+            // ★成功時の処理: admin-lineup.jsp (一覧画面) へ遷移する
+            // ---------------------------------------------------------
+            
+            // ① 最新の商品一覧を取得する
+            // ProductService.java にある "getProductListForDisplay" を使用
+            List<ProductDTO> productList = productService.getProductListForDisplay(); 
+
+            // ② 一覧画面用のViewModel (LineupViewModel) を作成する
+            LineupViewModel lineupVm = new LineupViewModel();
+            lineupVm.setProductList(productList);
+            lineupVm.setMessage("商品とオプション設定の登録が完了しました！");
+            
+            // ③ リクエストスコープに "vm" という名前でセット
+            // (これで admin-lineup.jsp が vm.productList や vm.message を読み取れます)
+            request.setAttribute("vm", lineupVm);
+
+            // ④ 一覧画面へフォワード
+            request.getRequestDispatcher("/WEB-INF/views/admin-lineup.jsp").forward(request, response);
+            return; // 処理終了
 
         } catch (Exception e) {
+            // ---------------------------------------------------------
+            // ★失敗時の処理: 登録画面(register.jsp)に戻す
+            // ---------------------------------------------------------
             e.printStackTrace();
-            nextView = "/WEB-INF/views/error.jsp";
-            vm.setSuccess(false);
-            vm.setMessage("登録失敗: " + e.getMessage());
-        } finally {
-            // カテゴリ再取得（既存）
-            CategoryDAO categoryDAO = new CategoryDAO();
-            List<CategoryDTO> categoryList = categoryDAO.findAll();
-            request.setAttribute("categoryList", categoryList);
             
-            // ★追加: オプション再取得
-            List<OptionDTO> optionList = productService.getOptionList();
-            if (vm != null) {
-                vm.setOptionList(optionList);
-            }
+            registerVm.setSuccess(false);
+            registerVm.setMessage("登録失敗: " + e.getMessage());
 
-            request.setAttribute("vm", vm); // 名前を "vm" に統一してください
-            request.getRequestDispatcher(nextView).forward(request, response);
+            // フォーム再表示のためにリストを再取得してセットする
+            CategoryDAO categoryDAO = new CategoryDAO();
+            registerVm.setCategoryList(categoryDAO.findAll());
+            registerVm.setOptionList(productService.getOptionList());
+            
+            request.setAttribute("vm", registerVm);
+            request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         }
-
-        // --- 再表示用データセット ---
-        vm.setCategoryList(customerService.getCategoryList());
-        // ★ここも忘れずに
-        vm.setOptionList(customerService.getOptionList());
-        
-        request.setAttribute("vm", vm);
-        request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
     }
     
     private String getFileName(Part part) {

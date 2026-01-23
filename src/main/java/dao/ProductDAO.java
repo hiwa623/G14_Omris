@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.dto.OptionDTO;
 import model.dto.ProductDTO;
 
 public class ProductDAO implements IProductDAO {
@@ -124,8 +125,8 @@ public class ProductDAO implements IProductDAO {
 		return product;
 	}
 
+	//商品更新メソッド
 	@Override
-	// ★ int を boolean に変更
 	public boolean updateProduct(ProductDTO p) {
 	    String sql = "UPDATE product SET category_id=?, product_name=?, price=?, product_description=?, product_image_url=?, favorite=?, updated_at=SYSDATE WHERE product_id=?";
 	    
@@ -153,18 +154,54 @@ public class ProductDAO implements IProductDAO {
 	}
 
 	@Override
-	public int deleteProduct(int productId) {
-		int result = 0;
-		try (Connection conn = DBManager.getConnection();
-				PreparedStatement ps = conn.prepareStatement(DELETE_PRODUCT_SQL)) {
-			ps.setInt(1, productId);
-			result = ps.executeUpdate();
-		} catch (SQLException e) {
-			System.err.println("商品削除エラー: " + e.getMessage());
-			e.printStackTrace();
-		}
-		return result;
-	}
+    public int deleteProduct(int productId) {
+        int result = 0;
+        String deleteOptionsSql = "DELETE FROM product_selectable_options WHERE product_id = ?";
+        // DELETE_PRODUCT_SQL はクラス上部で定義済みと想定: "DELETE FROM product WHERE product_id = ?"
+
+        // try-with-resourcesで接続を確保
+        try (Connection conn = DBManager.getConnection()) {
+            
+            // ★重要: 自動コミットをオフにする（トランザクション開始）
+            conn.setAutoCommit(false);
+
+            try {
+                // 1. オプション紐付けの削除
+                try (PreparedStatement psOpt = conn.prepareStatement(deleteOptionsSql)) {
+                    psOpt.setInt(1, productId);
+                    psOpt.executeUpdate();
+                }
+
+                // 2. 商品本体の削除
+                try (PreparedStatement psProd = conn.prepareStatement(DELETE_PRODUCT_SQL)) { // 既存の定数を使用
+                    psProd.setInt(1, productId);
+                    result = psProd.executeUpdate();
+                }
+
+                // ここまでエラーがなければコミット（確定）
+                conn.commit();
+
+            } catch (SQLException e) {
+                // 何かエラーが起きたらロールバック（変更を取り消す）
+                conn.rollback();
+                
+                // ★エラーコード 2292 は「整合性制約違反（子レコードあり）」
+                if (e.getErrorCode() == 2292) {
+                    System.err.println("【削除失敗】ID:" + productId + " は注文履歴が存在するため削除できません。");
+                } else {
+                    e.printStackTrace();
+                }
+                
+                // 失敗したので result を 0 に戻す
+                result = 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return result;
+    }
 
 	// ResultSetからDTOを作成する共通メソッド
 	private ProductDTO createProductDTOFromResultSet(ResultSet rs) throws SQLException {
@@ -292,4 +329,42 @@ public class ProductDAO implements IProductDAO {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+     * 指定された商品IDに紐づくオプションリストを取得する
+     * @param productId
+     * @return List<OptionDTO>
+     */
+    public List<OptionDTO> getOptionsByProductId(int productId) {
+        List<OptionDTO> list = new ArrayList<>();
+
+        // ★修正ポイント:
+        // 1. 中間テーブル名を 'product_selectable_options' (DDL定義通り) に変更
+        // 2. オプションテーブル名は 'options' (DDL定義通り)
+        String sql = "SELECT o.* FROM options o "
+                   + "JOIN product_selectable_options po ON o.id = po.option_id "
+                   + "WHERE po.product_id = ?";
+
+        try (Connection conn = DBManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    OptionDTO option = new OptionDTO();
+                    // DDLのカラム名に合わせてセット
+                    option.setId(rs.getInt("id"));
+                    option.setOptionName(rs.getString("option_name"));
+                    option.setOptionPrice(rs.getInt("option_price"));
+                    // option_limit などが必要ならここに追加
+                    
+                    list.add(option);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

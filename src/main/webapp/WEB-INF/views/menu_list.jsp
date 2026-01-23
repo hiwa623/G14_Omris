@@ -169,7 +169,7 @@ header {
 					</div>
 					<div class="product-price">¥ ${product.price}</div>
 
-					<a href="ProductDetailServlet?productId=${product.productId}"
+					<a href="ProductDetailServlet?id=${product.productId}"
 						class="add-btn"
 						style="text-align: center; text-decoration: none; display: block;">
 						商品詳細・オプション選択 </a>
@@ -183,9 +183,9 @@ header {
 		<a href="CartServlet" class="cart-btn">注文確認へ進む</a>
 	</div>
 	<div style="text-align: right; margin-bottom: 10px;">
-    <a href="OrderHistoryServlet" style="background:#3498db; color:white; padding:8px 15px; text-decoration:none; border-radius:5px; font-size:0.9rem;">
-        注文履歴を見る
-    </a>
-</div>
+		<a href="OrderHistoryServlet"
+			style="background: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 0.9rem;">
+			注文履歴を見る </a>
+	</div>
 </body>
 </html>

@@ -142,9 +142,12 @@ public class ProductService {
     
     /**
      * 削除メソッド
+     * @return 削除成功なら true
      */
-    public void deleteProduct(int productId) {
-        productDAO.deleteProduct(productId);
+    // ★ void から boolean に変更
+    public boolean deleteProduct(int productId) {
+        int result = productDAO.deleteProduct(productId);
+        return result > 0;
     }
     
     /**
@@ -161,5 +164,13 @@ public class ProductService {
     public List<OptionDTO> getOptionList() {
         return optionDAO.findAll();
     }
+    
+    /**
+     * 商品IDに紐づくオプションリスト（DTO）を取得する
+     * （お客様画面の商品詳細などで使用）
+     */
+    public List<OptionDTO> getOptionsByProductId(int productId) {
+        return productDAO.getOptionsByProductId(productId);
+    }	
 }
 

@@ -92,15 +92,28 @@ input[type="number"] {
 					required> 個
 			</div>
 
-			<div class="section-title">オプション（トッピングなど）</div>
-			<c:forEach var="opt" items="${optionList}">
-				<div class="option-item">
-					<label> <input type="checkbox" name="optionIds"
-						value="${opt.id}"> ${opt.optionName}
-						(+¥${opt.optionPrice})
-					</label>
-				</div>
-			</c:forEach>
+			<%-- 
+			  ★修正ポイント: 
+			  サーブレットから渡された optionList が空でない場合のみ表示する。
+			  これにより、オプション設定のない商品で無駄なスペースが表示されなくなります。
+			--%>
+			<c:if test="${not empty optionList}">
+				<div class="section-title">オプション（トッピングなど）</div>
+				
+				<c:forEach var="opt" items="${optionList}">
+					<div class="option-item">
+						<label> 
+							<%-- valueはOptionDTOのID --%>
+							<input type="checkbox" name="optionIds" value="${opt.id}"> 
+							
+							<%-- 表示名 --%>
+							<c:out value="${opt.optionName}" />
+							(+¥<c:out value="${opt.optionPrice}" />)
+						</label>
+					</div>
+				</c:forEach>
+			</c:if>
+			<%-- オプション表示エリア終了 --%>
 
 			<button type="submit" class="btn-submit">カートに入れる</button>
 		</form>

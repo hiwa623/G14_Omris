@@ -21,27 +21,55 @@ public class DeleteProductServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		// 1. 削除する商品IDを取得
-        String idStr = request.getParameter("productId");
-        if (idStr != null && !idStr.isEmpty()) {
-            int productId = Integer.parseInt(idStr);
-            
-            // 2. Service経由で削除実行
-            productService.deleteProduct(productId);
-            
-            // 3. 一覧画面（AdminLineupServlet）へリダイレクト
-            // その際、URLの末尾に「削除完了」の目印を付ける
-            response.sendRedirect("AdminLineupServlet?status=deleted");
-        }
+		// IDパラメータの取得
+		String idStr = request.getParameter("id");
+
+		// IDがない場合は一覧へ戻す
+		if (idStr == null || idStr.isEmpty()) {
+			response.sendRedirect("ManagerServlet");
+			return; // ★ここで終了
+		}
 		
+		try {
+			int productId = Integer.parseInt(idStr);
+
+			// 削除実行
+			boolean isSuccess = productService.deleteProduct(productId);
+
+			if (isSuccess) {
+				// 成功時
+				response.sendRedirect("AdminLineupServlet?msg=deleted");
+			} else {
+				// 失敗時（注文履歴がある場合など）
+				// エラーメッセージ用のパラメータをつけて戻る
+				response.sendRedirect("ManagerServlet?error=delete_failed");
+			}
+			return;
+
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			// 数値変換エラーの場合
+			response.sendRedirect("ManagerServlet");
+			return;
+		} catch (Exception e) {
+            e.printStackTrace();
+            // その他の予期せぬエラー
+            response.sendRedirect("ManagerServlet?error=unknown");
+            return;
+        }
+		// 処理が終わったら一覧画面（管理メニュー）へリダイレクト
+		// ★ "ManagerServlet" はご自身の環境の商品一覧サーブレット名に合わせてください
+//		response.sendRedirect("ManagerServlet");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

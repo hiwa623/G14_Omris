@@ -76,6 +76,18 @@ img { max-width: 60px; height: auto; border-radius: 4px; }
 			</tbody>
 		</table>
 	</div>
+	
+	<%-- エラーメッセージの表示エリア --%>
+<c:if test="${param.error == 'delete_failed'}">
+    <div style="color: red; background: #ffdddd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        <strong>削除エラー：</strong> 注文履歴などの関連データが存在するため、この商品は削除できません。
+    </div>
+</c:if>
 
+<c:if test="${param.msg == 'deleted'}">
+    <div style="color: green; background: #ddffdd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        商品を削除しました。
+    </div>
+</c:if>
 </body>
 </html>
