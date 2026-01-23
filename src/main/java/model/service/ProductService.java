@@ -2,7 +2,9 @@ package model.service;
 
 import java.util.List;
 
+import dao.OptionDAO;
 import dao.ProductDAO;
+import model.dto.OptionDTO;
 import model.dto.ProductDTO;
 
 /**
@@ -15,6 +17,66 @@ public class ProductService {
 	private ProductDAO productDAO = new ProductDAO();
 //	private IProductDAO productDAO = new ProductDAOMock(); // ★ 仮データで動かすためのコード
 
+	// ★追加: OptionDAOの定義（なければインスタンス化）
+    private OptionDAO optionDAO = new OptionDAO();
+	
+ // 編集画面表示用に、現在選択されているオプションIDを取得する
+    public List<Integer> getSelectedOptionIds(int productId) {
+        return productDAO.getSelectedOptionIds(productId);
+    }
+
+    // 商品情報の更新処理
+    public boolean updateProduct(ProductDTO product, List<Integer> optionIds) {
+        // 1. 商品テーブルの更新
+        boolean isUpdated = productDAO.updateProduct(product);
+        
+        if (isUpdated) {
+            // 2. オプション紐付けの更新（一度消して登録し直す）
+            productDAO.updateProductOptions(product.getProductId(), optionIds);
+            return true;
+        }
+        return false;
+    }
+    
+	/**
+     * 商品と、その商品に紐づくオプションを登録するメソッド
+     * @param productDTO 商品情報
+     * @param optionIds 選択されたオプションIDのリスト
+     * @return 成功したらtrue
+     */
+    public boolean registerProduct(ProductDTO productDTO, List<Integer> optionIds) {
+        
+        // 1. 入力チェック（既存のロジックと同じ）
+        if (productDTO.getProductName() == null || productDTO.getProductName().trim().isEmpty()) {
+            System.err.println("【Service Error】商品名が未入力です。");
+            return false;
+        }
+        if (productDTO.getPrice() <= 0) {
+            System.err.println("【Service Error】単価が不正です。");
+            return false;
+        }
+
+        try {
+            // 2. 商品を登録し、登録された「商品ID」を取得する
+            // ※ProductDAOに insertProductAndReturnId というメソッドを作る必要があります（後述）
+            int newProductId = productDAO.insertProductAndReturnId(productDTO);
+            
+            if (newProductId > 0) {
+                // 3. オプションが選択されていれば、中間テーブルに登録する
+                if (optionIds != null && !optionIds.isEmpty()) {
+                    // ※ProductDAOに registerProductOptions というメソッドを作る必要があります（後述）
+                    productDAO.registerProductOptions(newProductId, optionIds);
+                }
+                return true;
+            } else {
+                return false;
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 	
 	/**
 	 * 商品一覧画面表示に必要な情報を取得する。
@@ -91,6 +153,13 @@ public class ProductService {
      */
     public void updateProduct(ProductDTO product) {
         productDAO.updateProduct(product);
+    }
+    
+    /**
+     * ★追加: オプション一覧を取得するメソッド
+     */
+    public List<OptionDTO> getOptionList() {
+        return optionDAO.findAll();
     }
 }
 

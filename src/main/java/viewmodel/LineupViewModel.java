@@ -11,7 +11,7 @@ import model.dto.ProductDTO;
  */
 public class LineupViewModel {
 	private List<ProductDTO> productList;
-	
+	private String message;
 	private int totalItemCount; // 全体の件数（ページング処理などで利用）
     private String errorMessage; // エラーメッセージやシステム通知
     private boolean displayFavoriteOnly; // 「お気に入り」のみ表示するフラグ
@@ -49,5 +49,13 @@ public class LineupViewModel {
     
     public void setDisplayFavoriteOnly(boolean displayFavoriteOnly) {
         this.displayFavoriteOnly = displayFavoriteOnly;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

@@ -1,29 +1,28 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>店長管理メニュー</title>
+<title>管理者メニュー</title>
 <style>
-    /* 少し見やすくするためのスタイル（任意） */
-    h1 { color: #333; border-bottom: 2px solid #ffcc00; display: inline-block; }
-    ul { line-height: 2; }
-    .new-tag { background: #ff4444; color: white; font-size: 0.8em; padding: 2px 5px; border-radius: 3px; margin-left: 5px; }
+    body { font-family: sans-serif; padding: 50px; text-align: center; background: #f0f0f0; }
+    .container { max-width: 500px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; text-decoration: none; color: white; border-radius: 5px; font-size: 1.2rem; box-sizing: border-box; }
+    .btn-list { background: #3498db; }
+    .btn-register { background: #2ecc71; }
+    .btn-back { background: #95a5a6; }
 </style>
 </head>
 <body>
-	<p>行いたい操作を選択してください。</p>
-
-	<ul>
-		<li><a href="RegisterServlet">商品の新規登録</a></li>
-		<li><a href="AdminLineupServlet">登録商品一覧</a></li>
-		<li><a href="OrderHistoryServlet">注文履歴の確認</a><span class="new-tag">NEW</span></li>
-		<li><a href="#">売上の確認（未実装）</a></li>
-		<li><a href="#">在庫管理（未実装）</a></li>
-	</ul>
-
-	<hr>
-	<a href="index.jsp">トップに戻る</a>
+    <div class="container">
+        <h1>店長管理画面</h1>
+        <p>操作を選択してください</p>
+        
+        <a href="AdminLineupServlet" class="btn btn-list">登録商品一覧・編集・削除</a>
+        <a href="RegisterServlet" class="btn btn-register">新規商品登録</a>
+        
+        <hr>
+        <a href="index.jsp" class="btn btn-back">トップに戻る</a>
+    </div>
 </body>
 </html>

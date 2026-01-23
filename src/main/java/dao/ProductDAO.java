@@ -125,33 +125,31 @@ public class ProductDAO implements IProductDAO {
 	}
 
 	@Override
-	public int updateProduct(ProductDTO productDTO) {
-		int result = 0;
-		try (Connection conn = DBManager.getConnection();
-				PreparedStatement ps = conn.prepareStatement(UPDATE_PRODUCT_SQL)) {
+	// ★ int を boolean に変更
+	public boolean updateProduct(ProductDTO p) {
+	    String sql = "UPDATE product SET category_id=?, product_name=?, price=?, product_description=?, product_image_url=?, favorite=?, updated_at=SYSDATE WHERE product_id=?";
+	    
+	    try (Connection con = DBManager.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+	        
+	        ps.setInt(1, p.getCategoryId());
+	        ps.setString(2, p.getProductName());
+	        ps.setInt(3, p.getPrice());
+	        ps.setString(4, p.getProductDescription());
+	        ps.setString(5, p.getProductImageUrl());
+	        ps.setInt(6, p.isFavorite() ? 1 : 0);
+	        ps.setInt(7, p.getProductId()); 
+	        
+	        int result = ps.executeUpdate();
+	        
+	        // ★これで boolean (true/false) が返せます
+	        return result > 0; 
 
-			// 1番目 : category_id
-			ps.setInt(1, productDTO.getCategoryId());
-			// 2番目 : product_name
-			ps.setString(2, productDTO.getProductName());
-			// 3番目 : product_description
-			ps.setString(3, productDTO.getProductDescription());
-			// 4番目 : price
-			ps.setInt(4, productDTO.getPrice());
-			// 5番目 : product_image_url
-			ps.setString(5, productDTO.getProductImageUrl());
-			// 6番目 : favorite (1 or 0)
-			ps.setInt(6, productDTO.isFavorite() ? 1 : 0);
-			// 7番目 : product_id (WHERE句の指定)
-			ps.setInt(7, productDTO.getProductId());
-			
-
-			result = ps.executeUpdate();
-		} catch (SQLException e) {
-			System.err.println("商品更新エラー: " + e.getMessage());
-			e.printStackTrace();
-		}
-		return result;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        // ★失敗時は false
+	        return false; 
+	    }
 	}
 
 	@Override
@@ -186,5 +184,112 @@ public class ProductDAO implements IProductDAO {
 		dto.setUpdateAt(rs.getTimestamp("updated_at"));
 
 		return dto;
+	}
+	
+	/**
+	 * 商品を登録し、発行されたシーケンスID(product_id)を返す
+	 */
+	public int insertProductAndReturnId(ProductDTO p) {
+	    String sql = "INSERT INTO product (category_id, product_name, price, product_description, product_image_url, favorite) VALUES (?, ?, ?, ?, ?, ?)";
+	    
+	    // IDを取得するための設定 ("product_id" はテーブルのカラム名)
+	    String[] generatedColumns = {"product_id"};
+	    
+	    try (Connection conn = DBManager.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql, generatedColumns)) {
+	        
+	        ps.setInt(1, p.getCategoryId());
+	        ps.setString(2, p.getProductName());
+	        ps.setInt(3, p.getPrice());
+	        ps.setString(4, p.getProductDescription());
+	        ps.setString(5, p.getProductImageUrl());
+	        ps.setInt(6, p.isFavorite() ? 1 : 0);
+	        
+	        int result = ps.executeUpdate();
+	        
+	        if (result > 0) {
+	            // 生成されたIDを取得する
+	            try (ResultSet rs = ps.getGeneratedKeys()) {
+	                if (rs.next()) {
+	                    return rs.getInt(1); // 新しい product_id を返す
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return -1; // 失敗時
+	}
+	
+	/**
+	 * 商品IDとオプションIDの紐付けを登録する
+	 */
+	public void registerProductOptions(int productId, List<Integer> optionIds) {
+	    String sql = "INSERT INTO product_selectable_options (product_id, option_id) VALUES (?, ?)";
+	    
+	    try (Connection con = DBManager.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+	        
+	        for (Integer optionId : optionIds) {
+	            ps.setInt(1, productId);
+	            ps.setInt(2, optionId);
+	            ps.addBatch(); // バッチ処理に追加
+	        }
+	        
+	        ps.executeBatch(); // まとめて実行
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+
+	// 2. その商品で選択済みのオプションIDを取得
+	public List<Integer> getSelectedOptionIds(int productId) {
+	    List<Integer> list = new ArrayList<>();
+	    String sql = "SELECT option_id FROM product_selectable_options WHERE product_id = ?";
+	    
+	    try (Connection con = DBManager.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setInt(1, productId);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                list.add(rs.getInt("option_id"));
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
+	}
+
+	// 3. オプション紐付けの更新（全削除→再登録）
+	public void updateProductOptions(int productId, List<Integer> optionIds) {
+	    // まず既存の紐付けを全て削除
+	    String deleteSql = "DELETE FROM product_selectable_options WHERE product_id = ?";
+	    // その後、新しい選択状態を登録
+	    String insertSql = "INSERT INTO product_selectable_options (product_id, option_id) VALUES (?, ?)";
+	    
+	    try (Connection con = DBManager.getConnection()) {
+	        // 削除
+	        try (PreparedStatement psDel = con.prepareStatement(deleteSql)) {
+	            psDel.setInt(1, productId);
+	            psDel.executeUpdate();
+	        }
+	        
+	        // 追加（選択されたものがあれば）
+	        if (optionIds != null && !optionIds.isEmpty()) {
+	            try (PreparedStatement psIns = con.prepareStatement(insertSql)) {
+	                for (Integer optId : optionIds) {
+	                    psIns.setInt(1, productId);
+	                    psIns.setInt(2, optId);
+	                    psIns.addBatch();
+	                }
+	                psIns.executeBatch();
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 }

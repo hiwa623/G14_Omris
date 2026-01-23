@@ -6,61 +6,111 @@
 <head>
 <meta charset="UTF-8">
 <title>商品メニュー新規登録</title>
+<style>
+/* オプション一覧を見やすくするための簡易スタイル */
+.option-box {
+	border: 1px solid #ccc;
+	padding: 10px;
+	border-radius: 4px;
+	background: #f9f9f9;
+	max-height: 150px;
+	overflow-y: auto;
+}
+.option-item {
+	display: block;
+	margin-bottom: 5px;
+}
+</style>
 </head>
 <body>
 
 	<h1>商品メニュー新規登録</h1>
 
-	<%-- ViewModelからのメッセージ表示 --%>
-	<c:if test="${not empty viewModel}">
-		<p
-			style="color: ${viewModel.success ? 'green' : 'red'}; font-weight: bold;">
-			<c:out value="${viewModel.message}" />
-			<c:if test="${not empty requestScope.imageUploadMessage}">
-				<br>(${requestScope.imageUploadMessage})
-            </c:if>
+	<%-- 
+       ★修正: Servletで request.setAttribute("vm", vm); としている前提です。
+       viewModel ではなく vm を使用します。
+    --%>
+	<c:if test="${not empty vm.message}">
+		<p style="color: ${vm.success ? 'green' : 'red'}; font-weight: bold;">
+			<c:out value="${vm.message}" />
 		</p>
 	</c:if>
 
-	<form action="RegisterServlet" method="POST"
-		enctype="multipart/form-data">
+	<%-- 画像を送るために enctype が必要です（既存通りでOK） --%>
+	<form action="RegisterServlet" method="POST" enctype="multipart/form-data">
 
-		<table>
+		<table border="1" cellpadding="10" style="border-collapse: collapse;">
 			<tr>
 				<th>商品名（必須）</th>
-				<td><input type="text" name="productName" required></td>
+				<%-- Servlet側: request.getParameter("name") に合わせる --%>
+				<td><input type="text" name="name" required></td>
 			</tr>
 			<tr>
 				<th>カテゴリ名（必須）</th>
-				<td><select name="categoryId" required>
-						<option value=""> カテゴリを選択してください </option>
-						<%-- Servletから渡された categoryList をループで回す --%>
-						<c:forEach var="cat" items="${categoryList}">
-							<%--value : サーバー（Servlet）に送信される値 (ID番号)
-                    		テキスト : 画面に表示される文字 (カテゴリー名)--%>
+				<td>
+					<select name="categoryId" required>
+						<option value="">カテゴリを選択してください</option>
+						<%-- 
+                           ★修正: ViewModelの中のリストを使います
+                           vm.categoryList
+                        --%>
+						<c:forEach var="cat" items="${vm.categoryList}">
 							<option value="${cat.categoryId}">
 								<c:out value="${cat.categoryName}" />
 							</option>
 						</c:forEach>
-				</select></td>
+					</select>
+				</td>
 			</tr>
+			
+			<%-- ★追加: オプション（トッピング）選択エリア --%>
+			<tr>
+				<th>関連オプション</th>
+				<td>
+					<div class="option-box">
+						<c:choose>
+							<c:when test="${empty vm.optionList}">
+								<span style="color:#666;">登録可能なオプションがありません</span>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="opt" items="${vm.optionList}">
+									<label class="option-item">
+										<%-- Servlet側: request.getParameterValues("optionIds") --%>
+										<input type="checkbox" name="optionIds" value="${opt.id}">
+										<c:out value="${opt.optionName}" /> (+${opt.optionPrice}円)
+									</label>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<small>※この商品で選択可能にするオプションにチェックを入れてください</small>
+				</td>
+			</tr>
+
 			<tr>
 				<th>商品単価（必須）</th>
+				<%-- Servlet側: request.getParameter("price") --%>
 				<td><input type="number" name="price" min="1" required></td>
 			</tr>
 			<tr>
 				<th>商品画像（必須）</th>
-				<td><input type="file" name="image" accept="image/*" required></td>
+				<%-- Servlet側: request.getPart("file") に合わせる --%>
+				<td><input type="file" name="file" accept="image/*" required></td>
 			</tr>
 			<tr>
 				<th>商品説明（必須）</th>
-				<td><textarea name="productDescription" rows="8" cols="50"
-						required></textarea></td>
+				<%-- Servlet側: request.getParameter("description") に合わせる --%>
+				<td><textarea name="description" rows="5" cols="40" required></textarea></td>
 			</tr>
 			<tr>
 				<th>おすすめ選択</th>
-				<td><input type="checkbox" name="isRecommended" value="true">
-					おすすめ商品として表示する</td>
+				<%-- Servlet側: request.getParameter("recommend") --%>
+				<td>
+					<label>
+						<input type="checkbox" name="recommend" value="true">
+						おすすめ商品として表示する
+					</label>
+				</td>
 			</tr>
 		</table>
 

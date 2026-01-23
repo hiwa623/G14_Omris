@@ -1,74 +1,81 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>商品管理一覧</title>
+<title>登録商品一覧</title>
+<style>
+/* スタイルはそのまま維持 */
+body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+.container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: left; vertical-align: middle; }
+th { background-color: #f2f2f2; }
+img { max-width: 60px; height: auto; border-radius: 4px; }
+.btn { padding: 5px 10px; text-decoration: none; color: white; border-radius: 4px; font-size: 0.9rem; border: none; cursor: pointer; }
+.btn-edit { background: #3498db; }
+.btn-delete { background: #e74c3c; }
+.btn-back { background: #95a5a6; display: inline-block; padding: 10px 20px; margin-bottom: 10px; }
+.msg { background: #dff0d8; color: #3c763d; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+</style>
 </head>
 <body>
-    <h1>商品一覧</h1>
 
-    <div>
-        <button onclick="location.href='RegisterServlet'">追加</button>
-    </div>
+	<div class="container">
+		<a href="ManagerServlet" class="btn btn-back">← メニューに戻る</a>
+		<h1>登録商品一覧</h1>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>おすすめ</th>
-            <th>商品名</th>
-            <th>カテゴリー</th> <%-- IDから名前に変更 --%>
-            <th>値段</th>
-            <th>削除</th>
-            <th>編集</th>
-        </tr>
-    </thead>
-    <%-- tbodyタグをなくし、直接 tr を並べる --%>
-    <c:forEach var="product" items="${productList}">
-        <tr>
-            <td style="text-align: center;">
-                <%-- おすすめ(favorite)が true の場合に ★ を表示 --%>
-                <c:if test="${product.favorite}">
-                    <span style="color: orange; font-weight: bold;">★</span>
-                </c:if>
-            </td>
-            <td><c:out value="${product.productName}" /></td>
-            
-            <%-- categoryId ではなく、追加した categoryName を表示 --%>
-            <td><c:out value="${product.categoryName}" /></td>
-            
-            <td><c:out value="${product.price}" />円</td>
-            <td>
-                <form action="DeleteProductServlet" method="post"
-                    onsubmit="return confirm('本当に削除しますか？');">
-                    <input type="hidden" name="productId"
-                        value="${product.productId}"> 
-                    <input type="submit" value="🗑️">
-                </form>
-            </td>
-            <td><a href="EditServlet?productId=${product.productId}">＞</a></td>
-        </tr>
-    </c:forEach>
-</table>
+		<%-- メッセージ表示エリア --%>
+		<c:if test="${not empty vm.errorMessage}">
+			<div class="msg"><c:out value="${vm.errorMessage}" /></div>
+		</c:if>
+		<%-- 成功メッセージなどがある場合用 --%>
+		<c:if test="${not empty vm.message}">
+			<div class="msg"><c:out value="${vm.message}" /></div>
+		</c:if>
 
-    <p>
-        <a href="ManagerServlet">管理メニューに戻る</a>
-    </p>
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>画像</th>
+					<th>商品名</th>
+					<th>価格</th>
+					<th>操作</th>
+					<%-- ★修正1: ここに書いてあった <a href...> を削除しました --%>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="p" items="${vm.productList}">
+					<tr>
+						<td>${p.productId}</td>
+						<td>
+							<%-- 画像パスにコンテキストパスを追加 --%>
+							<img src="${pageContext.request.contextPath}/${p.productImageUrl}" alt="商品画像">
+						</td>
+						<td>
+							<strong><c:out value="${p.productName}" /></strong><br>
+							<span style="font-size: 0.8rem; color: #666;"><c:out value="${p.productDescription}" /></span>
+						</td>
+						<td>¥ <fmt:formatNumber value="${p.price}" /></td>
+						<td style="white-space: nowrap;">
+							<%-- ★修正2: リンク先を 'EditProductServlet' に変更 --%>
+							<%-- ★修正3: パラメータ名を 'productId' から 'id' に変更 (Servlet側が getParameter("id") なので) --%>
+							<a href="EditProductServlet?id=${p.productId}" class="btn btn-edit">編集</a>
+							
+							<%-- 削除ボタン --%>
+							<a href="DeleteProductServlet?id=${p.productId}" 
+							   class="btn btn-delete"
+							   onclick="return confirm('本当に「${p.productName}」を削除しますか？');">削除</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
 
-    <script>
-        // URLのパラメータを確認する
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // もし status=deleted が含まれていたらダイアログを出す
-        if (urlParams.get('status') === 'deleted') {
-            alert('商品を削除しました。');
-
-            // URLからパラメータを消してスッキリさせる（ブラウザの履歴操作）
-            // これをしないと、再読み込みした時にまたアラートが出てしまうため
-            window.history.replaceState(null, '', window.location.pathname);
-        }
-    </script>
 </body>
 </html>

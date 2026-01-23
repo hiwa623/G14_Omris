@@ -32,7 +32,7 @@ public interface IProductDAO {
 	 * @param productDTO 更新する商品データ (IDを含む)
 	 * @return 更新されたレコード数 (通常は 1)
 	 */
-	int updateProduct(ProductDTO productDTO);
+	boolean updateProduct(ProductDTO product);
 
 	// 商品をDBから削除する。 (D: Delete)
 	/**

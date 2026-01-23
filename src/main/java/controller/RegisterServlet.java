@@ -2,6 +2,7 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.CategoryDAO;
@@ -13,143 +14,140 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import model.dto.CategoryDTO;
+import model.dto.OptionDTO;
 import model.dto.ProductDTO;
+import model.service.CustomerService;
 import model.service.ProductService;
 import viewmodel.MenuRegisterViewModel;
 
-/**
- * Servlet implementation class RegisterServlet
- */
 @WebServlet("/RegisterServlet")
 @MultipartConfig(
-	    fileSizeThreshold = 1024 * 1024, // 1MB
-	    maxFileSize = 1024 * 1024 * 10,  // 10MB
-	    maxRequestSize = 1024 * 1024 * 50 // 50MB
-	)
+    fileSizeThreshold = 1024 * 1024, 
+    maxFileSize = 1024 * 1024 * 10, 
+    maxRequestSize = 1024 * 1024 * 50
+)
 public class RegisterServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private static final String UPLOAD_DIR = "uploads"; // アップロード先ディレクトリ名
-	private ProductService productService = new ProductService();
-       
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// カテゴリー一覧を取得してJSPに渡す
-		CategoryDAO categoryDAO = new CategoryDAO();
-	    List<CategoryDTO> categoryList = categoryDAO.findAll();
-	    request.setAttribute("categoryList", categoryList);
-		// 商品登録フォーム用のJSPへフォワード
-        // パスは /WEB-INF/views/register.jsp と仮定
+    private static final long serialVersionUID = 1L;
+    private static final String UPLOAD_DIR = "uploads"; 
+
+    private ProductService productService = new ProductService();
+    private CustomerService customerService = new CustomerService();
+
+    // --- 画面表示 ---
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	// 1. カテゴリ一覧取得（既存）
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<CategoryDTO> categoryList = categoryDAO.findAll();
+        
+        // 2. ★追加: オプション一覧取得
+        List<OptionDTO> optionList = productService.getOptionList();
+
+        // 3. ViewModel作成
+        MenuRegisterViewModel vm = new MenuRegisterViewModel();
+        vm.setCategoryList(categoryList); // ←もしViewModelにCategoryListも持たせる修正をした場合
+        // もしくは request.setAttribute("categoryList", categoryList); のままならそのままでOK
+        
+        // ★追加: ViewModelにオプションリストをセット
+        vm.setOptionList(optionList);
+
+        // 4. リクエストスコープへセット
+        request.setAttribute("vm", vm);
+        // (JSP側で ${categoryList} を使っている場合は以下も残す)
+        request.setAttribute("categoryList", categoryList);
+
         request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
     }
-	
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO: 登録処理（Service呼び出し、DAO呼び出し、結果判定）を実装する
-// multipart/form-data のため、ここでは request.setCharacterEncoding("UTF-8"); は不要
-        
-        MenuRegisterViewModel viewModel = new MenuRegisterViewModel();
-        String nextView = "/WEB-INF/views/register.jsp"; 
-        
-        // DTOのインスタンスを先に生成（エラー時に値を保持するため）
-        ProductDTO productDTO = new ProductDTO();
-        String name = null; // DTO格納前に使用するため、tryの外で宣言
-
+    // --- 登録処理 ---
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        MenuRegisterViewModel vm = new MenuRegisterViewModel();
+        String nextView = null; // ★初期値がnull
         try {
-            // 1. ユーザー入力の取得 (Partとして取得するファイル以外)
-            name = request.getParameter("productName");
-            String description = request.getParameter("productDescription"); 
+            // 基本情報の取得
+            String productName = request.getParameter("name");
             String priceStr = request.getParameter("price");
+            String description = request.getParameter("description");
             String categoryIdStr = request.getParameter("categoryId");
-            String isRecommendedStr = request.getParameter("isRecommended");
-            
-            // 文字列から数値への変換
+            boolean isRecommended = request.getParameter("recommend") != null;
+
+            // ★追加: チェックボックスで選ばれたオプションID配列を取得
+            String[] optionIdStrs = request.getParameterValues("optionIds");
+            List<Integer> selectedOptionIds = new ArrayList<>();
+            if (optionIdStrs != null) {
+                for (String id : optionIdStrs) {
+                    selectedOptionIds.add(Integer.parseInt(id));
+                }
+            }
+
+            // 画像処理（省略：前回と同じコード）
+            String productImageUrl = null;
+            Part filePart = request.getPart("file");
+            if (filePart != null && filePart.getSize() > 0) {
+                String fileName = getFileName(filePart);
+                String uploadPath = getServletContext().getRealPath("/" + UPLOAD_DIR);
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) uploadDir.mkdir();
+                filePart.write(uploadPath + File.separator + fileName);
+                productImageUrl = UPLOAD_DIR + "/" + fileName;
+            }
+
+            // DTO作成
             int price = Integer.parseInt(priceStr);
             int categoryId = Integer.parseInt(categoryIdStr);
-            
-            // DTOに設定
-            productDTO.setProductName(name);
-            productDTO.setProductDescription(description); 
-            productDTO.setPrice(price);
-            productDTO.setCategoryId(categoryId);
-            productDTO.setFavorite(isRecommendedStr != null); 
-            
-            // 2. ★ 画像アップロード処理の実行とファイルパスの取得
-            Part filePart = request.getPart("image"); // name="image" の Part を取得
-            String applicationPath = request.getServletContext().getRealPath("");
-            String uploadPath = applicationPath + File.separator + UPLOAD_DIR;
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            
-            // ファイル名を取得
-            String imageFileName = getFileName(filePart); 
-            
-            if (imageFileName != null && !imageFileName.isEmpty()) {
-                // ファイルをサーバーに書き出す
-                filePart.write(uploadPath + File.separator + imageFileName);
-                
-                // DBに保存するパス (例: uploads/filename.jpg) を設定
-                // Webからアクセス可能な相対パスで保存するのが一般的
-                productDTO.setProductImageUrl(UPLOAD_DIR + "/" + imageFileName); // Unix/Webパス形式に統一
-                request.setAttribute("imageUploadMessage", imageFileName + "をアップロードしました。");
-            } else {
-                productDTO.setProductImageUrl(null); // ファイル未選択の場合はnullをDTOに設定
-            }
-            
-            // 3. Service層に業務処理を依頼
-            boolean result = productService.registerMenuItem(productDTO);
-            
-            // 4. 結果の判定とViewModelへの格納
-            if (result) {
-                viewModel.setSuccess(true);
-                viewModel.setMessage("メニュー「" + name + "」の登録が完了しました。");
-            } else {
-                viewModel.setSuccess(false);
-                viewModel.setMessage("メニュー登録に失敗しました。Service層でエラーが発生しました。");
-            }
 
-        } catch (NumberFormatException e) {
-            viewModel.setSuccess(false);
-            viewModel.setMessage("入力された数値が不正です。");
-            e.printStackTrace();
+            ProductDTO product = new ProductDTO();
+            product.setProductName(productName);
+            product.setPrice(price);
+            product.setProductDescription(description);
+            product.setCategoryId(categoryId);
+            product.setProductImageUrl(productImageUrl);
+            product.setFavorite(isRecommended);
+
+            // ★重要: Serviceへ商品と「紐付けたいオプションIDリスト」を渡す
+            // ※ProductService側にこのメソッド(registerProductWithOptionsなど)を作る必要があります
+            productService.registerProduct(product, selectedOptionIds);
+            
+            vm.setSuccess(true);
+            vm.setMessage("商品とオプション設定の登録が完了しました！");
+
         } catch (Exception e) {
-            // アップロード失敗やその他のシステムエラー
-            viewModel.setSuccess(false);
-            viewModel.setMessage("システムエラーが発生しました。アップロードまたは登録に失敗しました。");
             e.printStackTrace();
-            nextView = "/WEB-INF/views/error.jsp"; 
+            nextView = "/WEB-INF/views/error.jsp";
+            vm.setSuccess(false);
+            vm.setMessage("登録失敗: " + e.getMessage());
         } finally {
-        	// 再表示（エラー時など）のためにカテゴリー一覧を再度取得
-        	CategoryDAO categoryDAO = new CategoryDAO();
+            // カテゴリ再取得（既存）
+            CategoryDAO categoryDAO = new CategoryDAO();
             List<CategoryDTO> categoryList = categoryDAO.findAll();
             request.setAttribute("categoryList", categoryList);
-        	
-            // DTOとViewModelをリクエストスコープに格納（再表示時にフォームの値を維持するためなど）
-            request.setAttribute("product", productDTO);
-            request.setAttribute("viewModel", viewModel);
+            
+            // ★追加: オプション再取得
+            List<OptionDTO> optionList = productService.getOptionList();
+            if (vm != null) {
+                vm.setOptionList(optionList);
+            }
+
+            request.setAttribute("vm", vm); // 名前を "vm" に統一してください
             request.getRequestDispatcher(nextView).forward(request, response);
         }
-    }
 
-    /**
-     * Partオブジェクトからファイル名を取得するヘルパーメソッド
-     */
+        // --- 再表示用データセット ---
+        vm.setCategoryList(customerService.getCategoryList());
+        // ★ここも忘れずに
+        vm.setOptionList(customerService.getOptionList());
+        
+        request.setAttribute("vm", vm);
+        request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+    }
+    
     private String getFileName(Part part) {
         String contentDisp = part.getHeader("content-disposition");
         for (String token : contentDisp.split(";")) {
             if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf('=') + 1).trim().replace("\"", "");
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
             }
         }
-        return null;
+        return "";
     }
-	
-
 }
