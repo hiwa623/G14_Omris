@@ -23,7 +23,7 @@
     <div class="container">
         <div class="nav-links">
             <a href="SalesDailyServlet" class="active">📅 日別売上推移</a>
-            <a href="SalesProductServlet">🏆 商品別ランキング</a>
+            <a href="SalesProductServlet">🏆 商品別ランキング!</a>
         </div>
 
         <h1>日別売上レポート</h1>
