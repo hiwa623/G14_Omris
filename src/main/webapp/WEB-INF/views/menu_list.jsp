@@ -40,6 +40,7 @@ header {
 	border-radius: 5px;
 	font-size: 1.2rem;
 	cursor: pointer;
+	border: none; /* ボタンっぽく見せるため */
 }
 
 .category-btn.active {
@@ -55,6 +56,7 @@ header {
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	/* レスポンシブグリッド */
 	gap: 20px;
+	align-content: start; /* フィルタリング時にレイアウトが崩れないように */
 }
 
 /* 商品カード */
@@ -63,7 +65,7 @@ header {
 	border-radius: 10px;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
-	display: flex;
+	display: flex; /* ここでflex指定されているのでJSで戻すときはflexにする */
 	flex-direction: column;
 	transition: transform 0.2s;
 }
@@ -141,15 +143,19 @@ header {
 </head>
 <body>
 	<header>
+		<a href="javascript:void(0);" class="category-btn active" onclick="filterCategory('all', this)">すべて</a>
+		
 		<c:forEach var="cat" items="${viewModel.categoryList}">
-			<a href="#cat-${cat.categoryId}" class="category-btn">${cat.categoryName}</a>
+			<a href="javascript:void(0);" class="category-btn" onclick="filterCategory('${cat.categoryId}', this)">
+				${cat.categoryName}
+			</a>
 		</c:forEach>
 	</header>
 
 	<div class="menu-container">
 		<c:forEach var="product" items="${viewModel.productList}">
-
-			<div class="product-card" id="cat-${product.categoryId}">
+			
+			<div class="product-card" data-category-id="${product.categoryId}">
 				<c:choose>
 					<c:when test="${not empty product.productImageUrl}">
 						<img src="${product.productImageUrl}" class="product-image"
@@ -187,5 +193,33 @@ header {
 			style="background: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 0.9rem;">
 			注文履歴を見る </a>
 	</div>
+
+	<script>
+		function filterCategory(catId, element) {
+			// 1. 全てのボタンから 'active' クラスを外す
+			var buttons = document.querySelectorAll('.category-btn');
+			buttons.forEach(function(btn) {
+				btn.classList.remove('active');
+			});
+
+			// 2. クリックされたボタンに 'active' クラスをつける
+			element.classList.add('active');
+
+			// 3. 商品カードを全て取得してループ処理
+			var products = document.querySelectorAll('.product-card');
+			
+			products.forEach(function(card) {
+				// カードのカテゴリーIDを取得
+				var cardCatId = card.getAttribute('data-category-id');
+
+				// 'all'が選ばれているか、IDが一致すれば表示
+				if (catId === 'all' || cardCatId === catId) {
+					card.style.display = 'flex'; // CSSで元々flex指定されているため
+				} else {
+					card.style.display = 'none'; // 非表示
+				}
+			});
+		}
+	</script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-/model/
-/viewmodel/
-/dao/
 /controller/
+/dao/
+/model/
