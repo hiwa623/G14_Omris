@@ -11,7 +11,7 @@ public class OrderDetailDAO {
     // 【修正】新設計に合わせて product_status_id（初期値 'NEW'）を追加
     private static final String INSERT_DETAIL_SQL = 
         "INSERT INTO order_details (order_id, product_id, product_status_id, quantity, price) " +
-        "VALUES (?, ?, 'NEW', ?, ?)";
+        "VALUES (?, ?, 'COOKING', ?, ?)";
     
     /**
      * 注文明細を登録し、生成されたIDを返す。

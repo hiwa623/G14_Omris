@@ -1,6 +1,8 @@
 package model.dto;
 
-public class SalesDTO {
+import java.io.Serializable;
+
+public class SalesDTO implements Serializable {
     // 日別集計用
     private String salesDate; // 日付 (YYYY-MM-DD)
     private int totalSales;   // 合計金額

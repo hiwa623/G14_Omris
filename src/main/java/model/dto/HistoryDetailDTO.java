@@ -1,9 +1,10 @@
 package model.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryDetailDTO {
+public class HistoryDetailDTO implements Serializable{
 
 	private String productName;
 	private int price;

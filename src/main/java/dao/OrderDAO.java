@@ -238,4 +238,27 @@ public class OrderDAO {
 
 		return historyList;
 	}
+	
+	/**
+     * 指定されたテーブルの全ての注文明細ステータスを「支払い済み(PAID)」に更新する
+     * @param tableId テーブルID
+     * @param paidStatusId 支払い済みステータスID (文字列 "PAID")
+     * @throws SQLException
+     */
+    // 修正: 第2引数を String に変更
+    public void updateStatusToPaid(int tableId, String paidStatusId) throws SQLException {
+        
+        String sql = "UPDATE order_details SET product_status_id = ? " +
+                     "WHERE order_id IN (SELECT order_id FROM orders WHERE table_id = ?)";
+
+        try (Connection conn = DBManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            // 修正: setInt ではなく setString を使用
+            ps.setString(1, paidStatusId); 
+            ps.setInt(2, tableId);
+            
+            ps.executeUpdate();
+        }
+    }
 }
