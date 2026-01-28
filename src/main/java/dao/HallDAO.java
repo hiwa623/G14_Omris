@@ -7,18 +7,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.dto.KitchenRowDTO;
+import model.dto.HallRowDTO;
 
-public class KitchenDAO {
+public class HallDAO {
 
-    // DBの product_status.id と一致させる
-    public static final String STATUS_COOKING = "COOKING";
-    public static final String STATUS_COOKED  = "COOKED";
+    public static final String STATUS_COOKED = "COOKED";
+    public static final String STATUS_SERVED = "SERVED";
 
     /**
-     * 注文料理一覧（COOKING）
+     * 提供前一覧（COOKED）
      */
-    public List<KitchenRowDTO> findCookingRows(Connection con) throws SQLException {
+    public List<HallRowDTO> findCookedRows(Connection con) throws SQLException {
 
         String sql =
             "SELECT od.detail_id, p.product_name, od.quantity, tm.table_no, " +
@@ -32,55 +31,66 @@ public class KitchenDAO {
             " WHERE od.product_status_id = ? " +
             " ORDER BY o.order_date ASC, od.detail_id ASC";
 
-        List<KitchenRowDTO> list = new ArrayList<>();
+        List<HallRowDTO> list = new ArrayList<>();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, STATUS_COOKING);
+            ps.setString(1, STATUS_COOKED);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(mapRow(rs));
-                }
+                while (rs.next()) list.add(mapRow(rs));
             }
         }
-
         return list;
     }
 
     /**
-     * 完了済み商品（COOKED）
+     * 提供済み一覧（SERVED かつ 30分以内）
      */
-    public List<KitchenRowDTO> findCookedRows(Connection con) throws SQLException {
+    public List<HallRowDTO> findServedRowsWithin30Min(Connection con) throws SQLException {
 
         String sql =
             "SELECT od.detail_id, p.product_name, od.quantity, tm.table_no, " +
             "       od.product_status_id, ps.name AS status_name, " +
-            "       o.order_date AS sort_time, od.updated_at " +
+            "       od.updated_at AS sort_time, od.updated_at " +
             "  FROM order_details od " +
             "  JOIN product p ON od.product_id = p.product_id " +
             "  JOIN orders o ON od.order_id = o.order_id " +
             "  JOIN table_master tm ON o.table_id = tm.id " +
             "  JOIN product_status ps ON od.product_status_id = ps.id " +
             " WHERE od.product_status_id = ? " +
+            "   AND od.updated_at >= (SYSTIMESTAMP - INTERVAL '30' MINUTE) " +
             " ORDER BY od.updated_at DESC, od.detail_id DESC";
 
-        List<KitchenRowDTO> list = new ArrayList<>();
+        List<HallRowDTO> list = new ArrayList<>();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, STATUS_COOKED);
+            ps.setString(1, STATUS_SERVED);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(mapRow(rs));
-                }
+                while (rs.next()) list.add(mapRow(rs));
             }
         }
-
         return list;
     }
 
     /**
-     * 調理完了（COOKING → COOKED）
+     * 配膳完了（COOKED → SERVED）
      */
-    public int markCooked(Connection con, long orderDetailId) throws SQLException {
+    public int markServed(Connection con, long orderDetailId) throws SQLException {
+        String sql =
+            "UPDATE order_details " +
+            "   SET product_status_id = ?, updated_at = SYSTIMESTAMP " +
+            " WHERE detail_id = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, STATUS_SERVED);
+            ps.setLong(2, orderDetailId);
+            return ps.executeUpdate();
+        }
+    }
+
+    /**
+     * 提供済みキャンセル（SERVED → COOKED）
+     */
+    public int cancelServed(Connection con, long orderDetailId) throws SQLException {
         String sql =
             "UPDATE order_details " +
             "   SET product_status_id = ?, updated_at = SYSTIMESTAMP " +
@@ -93,24 +103,8 @@ public class KitchenDAO {
         }
     }
 
-    /**
-     * 完了キャンセル（COOKED → COOKING）
-     */
-    public int cancelCompleted(Connection con, long orderDetailId) throws SQLException {
-        String sql =
-            "UPDATE order_details " +
-            "   SET product_status_id = ?, updated_at = SYSTIMESTAMP " +
-            " WHERE detail_id = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, STATUS_COOKING);
-            ps.setLong(2, orderDetailId);
-            return ps.executeUpdate();
-        }
-    }
-
-    private KitchenRowDTO mapRow(ResultSet rs) throws SQLException {
-        return new KitchenRowDTO(
+    private HallRowDTO mapRow(ResultSet rs) throws SQLException {
+        return new HallRowDTO(
             rs.getLong("detail_id"),
             rs.getString("product_name"),
             rs.getLong("quantity"),

@@ -8,8 +8,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/KitchenConfirmServlet")
-public class KitchenConfirmServlet extends HttpServlet {
+@WebServlet("/HallServeConfirmServlet")
+public class HallServeConfirmServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -17,11 +17,11 @@ public class KitchenConfirmServlet extends HttpServlet {
 
         String idParam = request.getParameter("orderDetailId");
         if (idParam == null || idParam.isBlank()) {
-            response.sendRedirect(request.getContextPath() + "/KitchenServlet");
+            response.sendRedirect(request.getContextPath() + "/HallBeforeServlet");
             return;
         }
 
         request.setAttribute("orderDetailId", idParam);
-        request.getRequestDispatcher("/WEB-INF/views/kitchenConfirm.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/hallServeConfirm.jsp").forward(request, response);
     }
 }

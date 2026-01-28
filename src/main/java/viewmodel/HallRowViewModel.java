@@ -4,23 +4,25 @@ import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import model.dto.KitchenRowDTO;
+import model.dto.HallRowDTO;
 
-public class KitchenRowViewModel implements Serializable {
+public class HallRowViewModel implements Serializable {
 
     private long orderDetailId;
     private String productName;
     private String quantityText;
+    private String tableNo;
     private String sortTimeText;
     private String toggleUrl;
 
-    public KitchenRowViewModel() {}
+    public HallRowViewModel() {}
 
-    public static KitchenRowViewModel from(KitchenRowDTO dto, String toggleUrl, ZoneId zoneId) {
-        KitchenRowViewModel vm = new KitchenRowViewModel();
+    public static HallRowViewModel from(HallRowDTO dto, String toggleUrl, ZoneId zoneId) {
+        HallRowViewModel vm = new HallRowViewModel();
         vm.orderDetailId = dto.getOrderDetailId();
         vm.productName = dto.getProductName();
         vm.quantityText = String.valueOf(dto.getQuantity());
+        vm.tableNo = dto.getTableNo();
         vm.toggleUrl = toggleUrl;
 
         if (dto.getSortTime() != null) {
@@ -39,6 +41,7 @@ public class KitchenRowViewModel implements Serializable {
     public long getOrderDetailId() { return orderDetailId; }
     public String getProductName() { return productName; }
     public String getQuantityText() { return quantityText; }
+    public String getTableNo() { return tableNo; }
     public String getSortTimeText() { return sortTimeText; }
     public String getToggleUrl() { return toggleUrl; }
 }

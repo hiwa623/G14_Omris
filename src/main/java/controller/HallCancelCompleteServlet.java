@@ -8,12 +8,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.service.KitchenService;
+import model.service.HallService;
 
-@WebServlet("/KitchenCancelCompleteServlet")
-public class KitchenCancelCompleteServlet extends HttpServlet {
+@WebServlet("/HallCancelCompleteServlet")
+public class HallCancelCompleteServlet extends HttpServlet {
 
-    private final KitchenService service = new KitchenService();
+    private final HallService service = new HallService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -21,17 +21,18 @@ public class KitchenCancelCompleteServlet extends HttpServlet {
 
         String idParam = request.getParameter("orderDetailId");
         if (idParam == null || idParam.isBlank()) {
-            response.sendRedirect(request.getContextPath() + "/KitchenCompletedServlet");
+            response.sendRedirect(request.getContextPath() + "/HallServedServlet");
             return;
         }
 
         try {
             long orderDetailId = Long.parseLong(idParam);
-            service.cancelCompleted(orderDetailId);
+            service.cancelServed(orderDetailId);
         } catch (NumberFormatException | SQLException e) {
             e.printStackTrace();
         }
 
-        response.sendRedirect(request.getContextPath() + "/KitchenCompletedServlet");
+        // 保存完了したら提供済み一覧へ戻る仕様
+        response.sendRedirect(request.getContextPath() + "/HallServedServlet");
     }
 }

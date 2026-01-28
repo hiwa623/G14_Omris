@@ -1,5 +1,4 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,25 +10,18 @@
     .card { border: 1px solid #ddd; padding: 90px 40px; text-align: center; }
     .title { font-size: 22px; margin-bottom: 40px; }
     .btns { display:flex; justify-content:center; gap: 26px; }
-    .btnLink {
-      display:inline-block; padding: 16px 42px; border-radius: 8px;
-      text-decoration:none; background: #d9d9d9; color:#000;
-    }
-    .btn {
-      padding: 16px 42px; border-radius: 8px; border: 0; cursor: pointer;
-      background: #d9d9d9;
-    }
+    .btnLink { display:inline-block; padding: 16px 42px; border-radius: 8px; text-decoration:none; background: #d9d9d9; color:#000; }
+    .btn { padding: 16px 42px; border-radius: 8px; border: 0; cursor: pointer; background: #d9d9d9; }
   </style>
 </head>
-
 <body>
 <div class="wrap">
   <div class="card">
     <div class="title">変更してよろしいですか</div>
     <div class="btns">
-      <a class="btnLink" href="${vm.noUrl}">いいえ</a>
-      <form method="post" action="${vm.actionUrl}">
-        <input type="hidden" name="orderDetailId" value="${vm.orderDetailId}">
+      <a class="btnLink" href="${pageContext.request.contextPath}/KitchenCompletedServlet">いいえ</a>
+      <form method="post" action="${pageContext.request.contextPath}/KitchenCancelCompleteServlet">
+        <input type="hidden" name="orderDetailId" value="${orderDetailId}">
         <button class="btn" type="submit">はい</button>
       </form>
     </div>

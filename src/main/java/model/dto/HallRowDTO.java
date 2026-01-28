@@ -3,7 +3,7 @@ package model.dto;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class KitchenRowDTO implements Serializable {
+public class HallRowDTO implements Serializable {
 
     private long orderDetailId;
     private String productName;
@@ -16,11 +16,11 @@ public class KitchenRowDTO implements Serializable {
     private Timestamp sortTime;
     private Timestamp updatedAt;
 
-    public KitchenRowDTO() {}
+    public HallRowDTO() {}
 
-    public KitchenRowDTO(long orderDetailId, String productName, long quantity,
-                         String tableNo, String productStatusId, String productStatusName,
-                         Timestamp sortTime, Timestamp updatedAt) {
+    public HallRowDTO(long orderDetailId, String productName, long quantity,
+                      String tableNo, String productStatusId, String productStatusName,
+                      Timestamp sortTime, Timestamp updatedAt) {
         this.orderDetailId = orderDetailId;
         this.productName = productName;
         this.quantity = quantity;

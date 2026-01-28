@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>キッチン｜変更確定</title>
+  <title>ホール｜完了キャンセル確認</title>
   <style>
     body { font-family: sans-serif; }
     .wrap { width: 900px; margin: 60px auto; }
@@ -14,13 +14,16 @@
     .btn { padding: 16px 42px; border-radius: 8px; border: 0; cursor: pointer; background: #fff; border: 3px solid #1e88ff; }
   </style>
 </head>
+
 <body>
 <div class="wrap">
   <div class="card">
     <div class="title">変更してよろしいですか</div>
+
     <div class="btns">
-      <a class="btnLink" href="${pageContext.request.contextPath}/KitchenServlet">いいえ</a>
-      <form method="post" action="${pageContext.request.contextPath}/KitchenCompleteServlet">
+      <a class="btnLink" href="${pageContext.request.contextPath}/HallServedServlet">いいえ</a>
+
+      <form method="post" action="${pageContext.request.contextPath}/HallCancelCompleteServlet">
         <input type="hidden" name="orderDetailId" value="${orderDetailId}">
         <button class="btn" type="submit">はい</button>
       </form>

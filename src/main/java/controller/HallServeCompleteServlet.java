@@ -8,12 +8,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.service.KitchenService;
+import model.service.HallService;
 
-@WebServlet("/KitchenCompleteServlet")
-public class KitchenCompleteServlet extends HttpServlet {
+@WebServlet("/HallServeCompleteServlet")
+public class HallServeCompleteServlet extends HttpServlet {
 
-    private final KitchenService service = new KitchenService();
+    private final HallService service = new HallService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -21,11 +21,12 @@ public class KitchenCompleteServlet extends HttpServlet {
 
         try {
             long orderDetailId = Long.parseLong(request.getParameter("orderDetailId"));
-            service.markCooked(orderDetailId);
+            service.markServed(orderDetailId);
         } catch (NumberFormatException | SQLException e) {
             e.printStackTrace();
         }
 
-        response.sendRedirect(request.getContextPath() + "/KitchenCompletedServlet");
+        // はいでも提供前一覧へ戻る仕様
+        response.sendRedirect(request.getContextPath() + "/HallBeforeServlet");
     }
 }
