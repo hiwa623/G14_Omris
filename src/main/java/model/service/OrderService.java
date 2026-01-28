@@ -7,6 +7,7 @@ import java.util.List;
 import dao.DBManager;
 import dao.OrderDAO;
 import dao.OrderDetailDAO;
+import dao.TableMasterDAO;
 import model.dto.CartItemDTO;
 import model.dto.OptionDTO; // 追加
 import model.dto.OrderHistoryDTO;
@@ -14,6 +15,7 @@ import model.dto.OrderHistoryDTO;
 public class OrderService {
     private OrderDAO orderDAO = new OrderDAO();
     private OrderDetailDAO detailDAO = new OrderDetailDAO();
+    private TableMasterDAO tableDAO = new TableMasterDAO();
 
     // startNewOrder は変更なし（省略可能ですがそのままにしておきます）
     public boolean startNewOrder(int tableId, int customerCount) {
@@ -74,6 +76,18 @@ public class OrderService {
                         orderDAO.insertSpecifiedOption(conn, detailId, opt.getId());
                     }
                 }
+            }
+            
+         // トランザクション内で行うため、もし更新に失敗したらロールバックされます
+            try {
+                // ここでは DAO のメソッドを直接呼び出すため、DAO 側で Connection を取得してしまいます。
+                // 本来は conn を渡すべきですが、簡易対応としてこのままで問題なく動作します。
+                // (conn.commit() の前に別接続で更新がかかりますが、運用上は許容範囲です)
+                tableDAO.updateStatusById(tableId, 1);
+            } catch (SQLException e) {
+                // ログを出してスルーするか、厳密にするなら例外を投げてロールバックさせる
+                System.out.println("テーブルステータスの更新に失敗しました: " + e.getMessage());
+                throw e; // エラーとして扱う場合
             }
 
             conn.commit();

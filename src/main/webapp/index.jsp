@@ -23,6 +23,7 @@
         <h2>開発中</h2>
         <a href="KitchenServlet">キッチン画面</a>
         <a href="HallBeforeServlet">ホール画面</a>
+        <a href="CashRegisterInputServlet">会計ごー！</a>
     </div>
     <div>
     	<h2>ログイン画面</h2>

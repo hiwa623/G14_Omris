@@ -50,11 +50,11 @@
         <form action="StartOrderServlet" method="post">
             <select name="tableId" required>
                 <option value="" disabled selected>選択してください</option>
-                <option value="1">No. 1</option>
-                <option value="2">No. 2</option>
-                <option value="3">No. 3</option>
-                <option value="4">No. 4</option>
-                <option value="5">No. 5</option>
+                <option value="1">C-1</option>
+                <option value="2">C-2</option>
+                <option value="3">C-3</option>
+                <option value="4">B-101</option>
+                <option value="5">B-102</option>
             </select>
             
             <button type="submit">次へ進む</button>
