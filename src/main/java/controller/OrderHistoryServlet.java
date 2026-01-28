@@ -22,6 +22,7 @@ public class OrderHistoryServlet extends HttpServlet {
 
 	// サービスを呼び出す準備
 	private CustomerService customerService = new CustomerService();
+	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

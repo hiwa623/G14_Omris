@@ -23,10 +23,12 @@ public class OrderDAO {
 	private static final String SELECT_ALL_ORDERS_SQL = "SELECT order_id, order_date, total_price FROM orders ORDER BY order_date DESC";
 
 	// 特定の注文に紐づく明細を取得（商品名も結合）
-	private static final String SELECT_DETAILS_BY_ORDER_ID_SQL = "SELECT d.quantity, d.price, p.product_name " +
-			"FROM order_details d " +
-			"JOIN product p ON d.product_id = p.product_id " +
-			"WHERE d.order_id = ?";
+	private static final String SELECT_DETAILS_BY_ORDER_ID_SQL = "SELECT d.quantity, d.price, p.product_name, d.product_status_id, s.status_name, d.detail_id " +
+            "FROM order_details d " +
+            "JOIN product p ON d.product_id = p.product_id " +
+            "LEFT JOIN product_status_master s ON d.product_status_id = s.status_id " + // ステータス名も取るならJOINが必要（なければ省略可）
+            "WHERE d.order_id = ? " +
+            "AND (d.product_status_id IS NULL OR d.product_status_id != 'PAID')"; // ★ここが重要！
 
 	// 明細に紐づくオプションを保存するSQL
 	private static final String INSERT_SPECIFIED_OPTION_SQL = "INSERT INTO order_specified_options (order_detail_id, option_id) VALUES (?, ?)";
@@ -154,7 +156,6 @@ public class OrderDAO {
 		List<OrderHistoryDTO> historyList = new ArrayList<>();
 
 		// 1. そのテーブルの注文(Orders)をすべて取得
-		// ※テーブル名は環境に合わせて orders としています
 		String sqlOrder = "SELECT order_id, order_date, total_price FROM orders WHERE table_id = ? ORDER BY order_date DESC";
 
 		try (Connection conn = DBManager.getConnection();
@@ -167,30 +168,34 @@ public class OrderDAO {
 					OrderHistoryDTO order = new OrderHistoryDTO();
 					order.setOrderId(rsOrder.getInt("order_id"));
 					order.setOrderDate(rsOrder.getTimestamp("order_date"));
-					order.setTotalPrice(rsOrder.getInt("total_price")); // DTOのフィールド名に合わせて修正 (totalAmount -> totalPrice)
+					// total_priceは後で「表示されている商品の合計」に再計算して上書きします
 
 					// 2. その注文に紐づく明細(Detail)を取得
-					// ここで product_status テーブルも結合してステータス名を取得します
-					// ※商品テーブル名は product, d.status から d.product_status_id に変更
+					// ★ここに「PAID以外」の条件を追加しました
 					String sqlDetail = "SELECT d.detail_id, d.quantity, d.price, d.product_status_id, " +
 							"       p.product_name, " +
 							"       ps.name AS status_name " +
 							"FROM order_details d " +
 							"JOIN product p ON d.product_id = p.product_id " +
 							"LEFT JOIN product_status ps ON d.product_status_id = ps.id " +
-							"WHERE d.order_id = ?";
+							"WHERE d.order_id = ? " +
+							"AND (d.product_status_id IS NULL OR d.product_status_id != 'PAID')"; // ★追加部分
 
 					try (PreparedStatement psDetail = conn.prepareStatement(sqlDetail)) {
 						psDetail.setInt(1, order.getOrderId());
 
 						try (ResultSet rsDetail = psDetail.executeQuery()) {
 							List<HistoryDetailDTO> details = new ArrayList<>();
+							int currentTotal = 0; // 表示用合計金額の計算用
 
 							while (rsDetail.next()) {
 								HistoryDetailDTO detail = new HistoryDetailDTO();
 								detail.setProductName(rsDetail.getString("product_name"));
 								detail.setPrice(rsDetail.getInt("price"));
 								detail.setQuantity(rsDetail.getInt("quantity"));
+								
+								// 合計金額を加算
+								currentTotal += detail.getPrice() * detail.getQuantity();
 
 								String sId = rsDetail.getString("product_status_id");
 								String sName = rsDetail.getString("status_name");
@@ -203,33 +208,32 @@ public class OrderDAO {
 								detail.setStatusId(sId);
 								detail.setStatusName(sName);
 
-								// 【修正】取得する際のカラム名も detail_id に変更
 								int detailId = rsDetail.getInt("detail_id");
 
 								// --- オプション取得処理 ---
-								// ※もしここでもエラーが出る場合は、order_specified_optionsテーブル側のカラム名も確認してください
-								//  (例: order_detail_id なのか detail_id なのか)
 								String sqlOpt = "SELECT o.option_name FROM order_specified_options oso " +
-										"JOIN options o ON oso.option_id = o.id " + // 【修正】o.option_id を o.id に変更
-										"WHERE oso.order_detail_id = ?"; // ←ここも確認ポイント（後述）
+										"JOIN options o ON oso.option_id = o.id " + 
+										"WHERE oso.order_detail_id = ?";
 
 								try (PreparedStatement psOpt = conn.prepareStatement(sqlOpt)) {
-									// 先ほど修正した detail_id をセット
 									psOpt.setInt(1, detailId);
-
 									try (ResultSet rsOpt = psOpt.executeQuery()) {
 										while (rsOpt.next()) {
 											detail.addOptionName(rsOpt.getString("option_name"));
 										}
 									}
 								}
-
 								details.add(detail);
 							}
-							order.setDetails(details);
+							
+							// ★重要: 明細が1つもない（すべてPAIDになった）注文はリストに追加しない
+							if (!details.isEmpty()) {
+								order.setDetails(details);
+								order.setTotalPrice(currentTotal); // 合計金額を表示分だけに更新
+								historyList.add(order);
+							}
 						}
 					}
-					historyList.add(order);
 				}
 			}
 		} catch (SQLException e) {

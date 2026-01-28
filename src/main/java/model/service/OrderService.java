@@ -102,7 +102,8 @@ public class OrderService {
         }
     }
     
-    public List<OrderHistoryDTO> getOrderHistory() {
-        return orderDAO.findAllOrders();
+    public List<OrderHistoryDTO> getOrderHistory(int tableId) {
+        // 全件検索(findAllOrders)ではなく、テーブル指定検索(findHistoryByTableId)を使う
+        return orderDAO.findHistoryByTableId(tableId);
     }
 }
