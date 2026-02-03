@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+body {
+	font-family: sans-serif;
+	padding: 50px;
+	text-align: center;
+	background: #f0f0f0;
+}
+
+.container {
+	max-width: 500px;
+	margin: 0 auto;
+	background: white;
+	padding: 40px;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+	display: block;
+	width: 100%;
+	padding: 15px;
+	margin: 10px 0;
+	text-decoration: none;
+	color: white;
+	border-radius: 5px;
+	font-size: 1.2rem;
+	box-sizing: border-box;
+}
+
+.btn-list {
+	background: #3498db;
+}
+
+.btn-register {
+	background: #2ecc71;
+}
+
+.btn-back {
+	background: #95a5a6;
+}

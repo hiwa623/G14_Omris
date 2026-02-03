@@ -7,32 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>注文履歴</title>
-<style>
-    body { font-family: sans-serif; background: #f5f5f5; margin: 0; padding: 20px; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #2c3e50; font-size: 1.5rem;}
-    
-    /* 注文ごとのカードデザイン */
-    .order-card { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; padding: 15px; background: #fff; }
-    .order-header { display: flex; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; font-weight: bold; color: #555; }
-    
-    /* 明細行のデザイン */
-    .detail-item { padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between; align-items: flex-start; }
-    .item-info { flex: 1; }
-    .item-name { font-weight: bold; font-size: 1.1rem; }
-    .item-opts { font-size: 0.85rem; color: #7f8c8d; margin-left: 10px; display: block; }
-    
-    /* ステータスバッジのデザイン */
-    .status-badge {
-        display: inline-block; padding: 2px 8px; border-radius: 4px;
-        font-size: 0.8rem; color: white; margin-left: 5px; vertical-align: middle;
-        white-space: nowrap;
-    }
-    
-    .order-total { text-align: right; margin-top: 10px; font-size: 1.2rem; font-weight: bold; color: #e67e22; }
-    
-    .btn-back { display: block; width: 100%; text-align: center; background: #95a5a6; color: white; padding: 15px; text-decoration: none; border-radius: 5px; margin-top: 20px; box-sizing: border-box;}
-</style>
+<link rel="stylesheet" href="assets/css/order_history.css">
 </head>
 <body>
 

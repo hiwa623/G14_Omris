@@ -1,0 +1,38 @@
+@charset "utf-8";
+
+body {
+	font-family: "Helvetica Neue", Arial, sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #333;
+	margin: 0;
+	color: white;
+}
+
+.container {
+	background-color: white;
+	color: #333;
+	padding: 40px;
+	border-radius: 10px;
+	text-align: center;
+	width: 90%;
+	max-width: 400px;
+}
+
+select,
+button {
+	width: 100%;
+	padding: 15px;
+	font-size: 1.2rem;
+	margin-top: 10px;
+	border-radius: 5px;
+}
+
+button {
+	background-color: #d35400;
+	color: white;
+	border: none;
+	cursor: pointer;
+}

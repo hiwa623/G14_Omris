@@ -1,58 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>人数入力</title>
-<style>
-    /* start_order.jsp と同じスタイル */
-    body {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #333;
-        margin: 0;
-        color: white;
-    }
-    .container {
-        background-color: white;
-        color: #333;
-        padding: 40px;
-        border-radius: 10px;
-        text-align: center;
-        width: 90%;
-        max-width: 400px;
-    }
-    input, button {
-        width: 100%;
-        padding: 15px;
-        font-size: 1.2rem;
-        margin-top: 10px;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
-    button {
-        background-color: #27ae60; /* 色を変えてみました */
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-</style>
+<link rel="stylesheet" href="assets/css/customer_count.css">
+<script src="assets/js/customer_count.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>人数入力</h1>
-        <p>Table No. <%= session.getAttribute("tableId") %></p>
-        <p>ご利用人数を入力してください</p>
-        
-        <form action="ConfirmCountServlet" method="post">
-            <input type="number" name="customerCount" min="1" max="99" value="1" required>
-            <button type="submit">メニューを見る</button>
-        </form>
-    </div>
+	<div style="text-align: right; margin-top: 20px; font-size: 0.8rem;">
+		現在設定中のテーブル:
+		<%=session.getAttribute("tableId")%>番<br> <a
+			href="StartOrderServlet?action=reset" style="color: gray;">[設定を解除してテーブル番号を変更]</a>
+	</div>
+	<div class="container">
+		<h1>人数入力</h1>
+		<p>
+			Table No.
+			<%=session.getAttribute("tableId")%></p>
+		<p>ご利用人数を入力してください</p>
+
+		<form action="ConfirmCountServlet" method="post">
+			<div class="counter-wrapper">
+				<button type="button" class="btn-count minus"
+					onclick="updateCount(-1)">－</button>
+
+				<input type="text" id="countInput" name="customerCount"
+					class="count-display" value="1" readonly>
+
+				<button type="button" class="btn-count plus"
+					onclick="updateCount(1)">＋</button>
+			</div>
+
+			<button type="submit" class="btn-submit">メニューを見る</button>
+		</form>
+	</div>
+
 </body>
 </html>

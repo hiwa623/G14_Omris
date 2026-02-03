@@ -5,17 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>オプション管理</title>
-<style>
-    body { font-family: sans-serif; padding: 20px; background: #f4f6f9; }
-    .container { max-width: 700px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
-    .form-group { margin-bottom: 20px; padding: 15px; background: #eee; border-radius: 5px; }
-    input[type="text"], input[type="number"] { padding: 8px; margin-right: 10px; }
-    button { padding: 8px 15px; background: #8e44ad; color: white; border: none; cursor: pointer; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 10px; border-bottom: 1px solid #ddd; }
-    th { background: #f8f9fa; text-align: left; }
-    .btn-back { display: block; margin-top: 20px; text-decoration: none; color: #555; }
-</style>
+<link rel="stylesheet" href="assets/css/admin-option.css">
 </head>
 <body>
     <div class="container">

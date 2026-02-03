@@ -7,154 +7,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>メニュー一覧</title>
-
-<style>
-/* タブレット風の簡易スタイル */
-body {
-	font-family: "Helvetica Neue", Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	background-color: #f5f5f5;
-	display: flex;
-	flex-direction: column;
-	height: 100vh;
-}
-
-/* ヘッダー（カテゴリバー） */
-header {
-	background-color: #333;
-	color: white;
-	padding: 10px;
-	overflow-x: auto; /* 横スクロール可能に */
-	white-space: nowrap;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.category-btn {
-	display: inline-block;
-	padding: 15px 25px;
-	margin-right: 10px;
-	background-color: #555;
-	color: white;
-	text-decoration: none;
-	border-radius: 5px;
-	font-size: 1.2rem;
-	cursor: pointer;
-	border: none; /* ボタンっぽく見せるため */
-}
-
-.category-btn.active {
-	background-color: #d35400; /* 選択中の色 */
-}
-
-/* メインエリア（商品一覧） */
-.menu-container {
-	flex: 1;
-	padding: 20px;
-	overflow-y: auto;
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	/* レスポンシブグリッド */
-	gap: 20px;
-	align-content: start; /* フィルタリング時にレイアウトが崩れないように */
-}
-
-/* 商品カード */
-.product-card {
-	background: white;
-	border-radius: 10px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	overflow: hidden;
-	display: flex; /* ここでflex指定されているのでJSで戻すときはflexにする */
-	flex-direction: column;
-	transition: transform 0.2s;
-}
-
-.product-card:active {
-	transform: scale(0.98); /* タップ時の凹み */
-}
-
-.product-image {
-	width: 100%;
-	height: 150px;
-	object-fit: cover;
-	background-color: #eee;
-}
-
-.product-info {
-	padding: 15px;
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.product-name {
-	font-weight: bold;
-	font-size: 1.1rem;
-	margin-bottom: 5px;
-}
-
-.product-desc {
-	font-size: 0.8rem;
-	color: #666;
-	margin-bottom: 10px;
-}
-
-.product-price {
-	color: #d35400;
-	font-weight: bold;
-	font-size: 1.2rem;
-	text-align: right;
-}
-
-/* カートボタンなど（下部固定などにする場合） */
-.footer-bar {
-	background: white;
-	padding: 15px;
-	text-align: right;
-	border-top: 1px solid #ddd;
-}
-
-.cart-btn {
-	background-color: #27ae60;
-	color: white;
-	padding: 15px 30px;
-	text-decoration: none;
-	border-radius: 5px;
-	font-size: 1.2rem;
-	font-weight: bold;
-}
-
-/* ボタンの見た目をしたsubmitボタン */
-.add-btn {
-	width: 100%;
-	padding: 10px;
-	background-color: #e67e22;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	font-size: 1rem;
-	cursor: pointer;
-	margin-top: 10px;
-}
-</style>
-
+<link rel="stylesheet" href="assets/css/menu_list.css">
+<script src="assets/js/menu_list.js"></script>
 </head>
 <body>
 	<header>
-		<a href="javascript:void(0);" class="category-btn active" onclick="filterCategory('all', this)">すべて</a>
-		
+		<a href="javascript:void(0);" class="category-btn active"
+			onclick="filterCategory('all', this)">すべて</a>
+
 		<c:forEach var="cat" items="${viewModel.categoryList}">
-			<a href="javascript:void(0);" class="category-btn" onclick="filterCategory('${cat.categoryId}', this)">
-				${cat.categoryName}
-			</a>
+			<a href="javascript:void(0);" class="category-btn"
+				onclick="filterCategory('${cat.categoryId}', this)">
+				${cat.categoryName} </a>
 		</c:forEach>
 	</header>
 
 	<div class="menu-container">
 		<c:forEach var="product" items="${viewModel.productList}">
-			
+
 			<div class="product-card" data-category-id="${product.categoryId}">
 				<c:choose>
 					<c:when test="${not empty product.productImageUrl}">
@@ -192,34 +62,12 @@ header {
 		<a href="OrderHistoryServlet"
 			style="background: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 0.9rem;">
 			注文履歴を見る </a>
+		<div style="margin-top: 20px;">
+			<a href="CheckoutConfirmServlet"
+				style="display: block; background: #e67e22; color: white; padding: 15px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold;">
+				お会計へ進む </a>
+		</div>
 	</div>
 
-	<script>
-		function filterCategory(catId, element) {
-			// 1. 全てのボタンから 'active' クラスを外す
-			var buttons = document.querySelectorAll('.category-btn');
-			buttons.forEach(function(btn) {
-				btn.classList.remove('active');
-			});
-
-			// 2. クリックされたボタンに 'active' クラスをつける
-			element.classList.add('active');
-
-			// 3. 商品カードを全て取得してループ処理
-			var products = document.querySelectorAll('.product-card');
-			
-			products.forEach(function(card) {
-				// カードのカテゴリーIDを取得
-				var cardCatId = card.getAttribute('data-category-id');
-
-				// 'all'が選ばれているか、IDが一致すれば表示
-				if (catId === 'all' || cardCatId === catId) {
-					card.style.display = 'flex'; // CSSで元々flex指定されているため
-				} else {
-					card.style.display = 'none'; // 非表示
-				}
-			});
-		}
-	</script>
 </body>
 </html>

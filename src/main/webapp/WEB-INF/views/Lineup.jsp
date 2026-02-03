@@ -8,34 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>オムライス屋さん | 商品ラインナップ</title>
-<style>
-body {
-	font-family: Arial, sans-serif;
-	margin: 20px;
-}
-
-.product-list {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 20px;
-}
-
-.product-card {
-	border: 1px solid #ccc;
-	padding: 15px;
-	width: 300px;
-}
-
-.favorite {
-	color: gold;
-	font-weight: bold;
-}
-
-.error-message {
-	color: red;
-	font-weight: bold;
-}
-</style>
+<link rel="stylesheet" href="assets/css/Lineup.css">
 </head>
 <body>
 	<h1>オムライス メニュー一覧</h1>

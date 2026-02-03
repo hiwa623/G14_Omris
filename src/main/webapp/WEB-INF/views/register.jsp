@@ -6,21 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>商品メニュー新規登録</title>
-<style>
-/* オプション一覧を見やすくするための簡易スタイル */
-.option-box {
-	border: 1px solid #ccc;
-	padding: 10px;
-	border-radius: 4px;
-	background: #f9f9f9;
-	max-height: 150px;
-	overflow-y: auto;
-}
-.option-item {
-	display: block;
-	margin-bottom: 5px;
-}
-</style>
+<link rel="stylesheet" href="assets/css/register.css">
 </head>
 <body>
 

@@ -1,0 +1,99 @@
+@charset "utf-8";
+
+body {
+	font-family: sans-serif;
+	text-align: center;
+	background-color: #f5f5f5;
+	padding: 20px;
+}
+
+.container {
+	max-width: 500px;
+	margin: 50px auto;
+	background: #fff;
+	padding: 40px 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+	color: #333;
+	margin-bottom: 30px;
+}
+
+p {
+	font-size: 1.1rem;
+	color: #555;
+}
+
+/* カウンターのデザイン */
+.counter-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 40px 0;
+	gap: 20px;
+}
+
+/* ＋－ボタン */
+.btn-count {
+	width: 60px;
+	height: 60px;
+	font-size: 2rem;
+	background-color: #eee;
+	border: 2px solid #ddd;
+	border-radius: 50%;
+	/* 丸くする */
+	cursor: pointer;
+	color: #555;
+	transition: all 0.2s;
+}
+
+.btn-count:active {
+	background-color: #ddd;
+	transform: scale(0.95);
+}
+
+.btn-count.plus {
+	color: #e67e22;
+	border-color: #e67e22;
+	background: #fff;
+}
+
+.btn-count.minus {
+	color: #95a5a6;
+}
+
+/* 人数表示エリア（inputタグだが入力不可に見せる） */
+.count-display {
+	width: 100px;
+	font-size: 3rem;
+	text-align: center;
+	border: none;
+	background: transparent;
+	font-weight: bold;
+	color: #333;
+}
+
+/* フォーカス時の枠線を消す */
+.count-display:focus {
+	outline: none;
+}
+
+/* 決定ボタン */
+.btn-submit {
+	background-color: #e67e22;
+	color: white;
+	border: none;
+	padding: 15px 40px;
+	font-size: 1.2rem;
+	border-radius: 30px;
+	cursor: pointer;
+	width: 100%;
+	max-width: 300px;
+	transition: background 0.3s;
+}
+
+.btn-submit:hover {
+	background-color: #d35400;
+}

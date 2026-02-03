@@ -5,11 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>商品編集</title>
-<style>
-/* register.jspと同じスタイル */
-.option-box { border: 1px solid #ccc; padding: 10px; border-radius: 4px; background: #f9f9f9; max-height: 150px; overflow-y: auto; }
-.option-item { display: block; margin-bottom: 5px; }
-</style>
+<link rel="stylesheet" href="assets/css/edit.css">
 </head>
 <body>
 

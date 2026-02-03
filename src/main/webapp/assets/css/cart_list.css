@@ -1,0 +1,130 @@
+@charset "utf-8";
+
+body {
+	font-family: "Helvetica Neue", Arial, sans-serif;
+	background: #f5f5f5;
+	padding: 20px;
+	color: #333;
+}
+
+.cart-container {
+	max-width: 900px;
+	margin: 0 auto;
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+	text-align: center;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+th,
+td {
+	padding: 15px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	vertical-align: middle;
+}
+
+th {
+	background-color: #f9f9f9;
+}
+
+.price-col {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.action-col {
+	text-align: center;
+	width: 150px;
+}
+
+.option-text {
+	font-size: 0.9rem;
+	color: #666;
+	margin-left: 10px;
+	display: block;
+}
+
+.total-area {
+	text-align: right;
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 30px;
+}
+
+.total-price {
+	color: #d35400;
+}
+
+/* ボタン類のデザイン */
+.btn-group {
+	display: flex;
+	gap: 10px;
+}
+
+.btn {
+	flex: 1;
+	padding: 15px;
+	text-align: center;
+	border-radius: 5px;
+	text-decoration: none;
+	font-size: 1.1rem;
+	border: none;
+	cursor: pointer;
+}
+
+.btn-back {
+	background: #95a5a6;
+	color: white;
+}
+
+.btn-order {
+	background: #d35400;
+	color: white;
+	font-weight: bold;
+}
+
+/* 変更・削除ボタン用のスタイル */
+.qty-input {
+	width: 50px;
+	padding: 5px;
+	font-size: 1rem;
+	text-align: center;
+}
+
+.btn-update {
+	background-color: #3498db;
+	color: white;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	margin-left: 5px;
+}
+
+.btn-delete {
+	background-color: #e74c3c;
+	color: white;
+	border: none;
+	padding: 8px 15px;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 0.9rem;
+}
+
+/* フォームをインライン表示にするための調整 */
+.form-inline {
+	display: inline-flex;
+	align-items: center;
+}

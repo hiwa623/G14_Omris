@@ -1,0 +1,138 @@
+@charset "UTF-8";
+
+body {
+	font-family: "Meiryo", sans-serif;
+	background-color: #eee;
+	padding: 20px;
+	display: flex;
+	justify-content: center;
+	height: 90vh;
+}
+
+/* レイアウト枠: 左右分割 */
+.main-container {
+	display: flex;
+	width: 900px;
+	gap: 20px;
+}
+
+/* 左カラム: 注文詳細 */
+.left-panel {
+	flex: 1;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	overflow-y: auto;
+}
+
+/* 右カラム: 会計操作 */
+.right-panel {
+	flex: 0 0 380px;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* テーブルデザイン */
+.order-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 10px;
+}
+
+.order-table th {
+	background: #f0f0f0;
+	padding: 10px;
+	border-bottom: 2px solid #ddd;
+	text-align: left;
+}
+
+.order-table td {
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.text-right {
+	text-align: right;
+}
+
+/* 金額表示 */
+.total-area {
+	text-align: center;
+	margin-bottom: 20px;
+	background: #333;
+	color: #fff;
+	padding: 15px;
+	border-radius: 5px;
+}
+
+.total-label {
+	font-size: 0.9em;
+	opacity: 0.8;
+}
+
+.total-price {
+	font-size: 2.2em;
+	font-weight: bold;
+}
+
+/* 入力エリア */
+.input-display {
+	width: 90%;
+	height: 50px;
+	font-size: 24px;
+	text-align: right;
+	padding: 5px 10px;
+	border: 2px solid #2e7d32;
+	border-radius: 5px;
+	background-color: #fff;
+	margin-bottom: 15px;
+}
+
+/* キーパッド */
+.keypad {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 8px;
+}
+
+.btn-key {
+	padding: 15px;
+	font-size: 1.2em;
+	border: 1px solid #ccc;
+	background-color: #f9f9f9;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.btn-key:active {
+	background-color: #ddd;
+}
+
+.btn-clear {
+	background-color: #ef9a9a;
+	color: #b71c1c;
+}
+
+.btn-submit {
+	grid-column: span 3;
+	padding: 20px;
+	font-size: 1.4em;
+	background-color: #2e7d32;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-weight: bold;
+	margin-top: 10px;
+}
+
+.change-info {
+	text-align: center;
+	height: 30px;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 10px;
+}

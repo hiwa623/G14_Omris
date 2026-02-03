@@ -5,42 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/start_order.css">
 <title>テーブル番号入力</title>
-<style>
-    /* CSSは共通で使えます */
-    body {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #333;
-        margin: 0;
-        color: white;
-    }
-    .container {
-        background-color: white;
-        color: #333;
-        padding: 40px;
-        border-radius: 10px;
-        text-align: center;
-        width: 90%;
-        max-width: 400px;
-    }
-    select, button {
-        width: 100%;
-        padding: 15px;
-        font-size: 1.2rem;
-        margin-top: 10px;
-        border-radius: 5px;
-    }
-    button {
-        background-color: #d35400;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-</style>
+
 </head>
 <body>
     <div class="container">
@@ -53,8 +20,15 @@
                 <option value="1">C-1</option>
                 <option value="2">C-2</option>
                 <option value="3">C-3</option>
-                <option value="4">B-101</option>
-                <option value="5">B-102</option>
+                <option value="3">C-4</option>
+                <option value="3">C-5</option>
+                
+                <option value="4">B-1</option>
+                <option value="5">B-2</option>
+                <option value="5">B-3</option>
+                <option value="5">B-4</option>
+                <option value="5">B-5</option>
+                <option value="5">B-6</option>
             </select>
             
             <button type="submit">次へ進む</button>

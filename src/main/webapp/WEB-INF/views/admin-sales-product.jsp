@@ -6,18 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>商品別売上ランキング</title>
-<style>
-    /* dailyと同じCSSを使用 */
-    body { font-family: sans-serif; padding: 20px; background: #f4f6f9; }
-    .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
-    .search-box { background: #eee; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 10px; border-bottom: 1px solid #ddd; }
-    .btn { padding: 5px 15px; background: #e67e22; color: white; border: none; cursor: pointer; }
-    .nav-links { margin-bottom: 20px; }
-    .nav-links a { margin-right: 15px; text-decoration: none; color: #333; font-weight: bold; border-bottom: 2px solid transparent; }
-    .nav-links a.active { border-bottom: 2px solid #e67e22; color: #e67e22; }
-</style>
+<link rel="stylesheet" href="assets/css/admin-sales-product.css">
 </head>
 <body>
     <div class="container">
