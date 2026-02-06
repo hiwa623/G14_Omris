@@ -6,57 +6,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${product.productName}-詳細</title>
+<title>${product.productName}- 詳細</title>
 <link rel="stylesheet" href="assets/css/product_detail.css">
 </head>
 <body>
 
-	<div class="detail-card">
-		<c:if test="${not empty product.productImageUrl}">
-			<img src="${product.productImageUrl}" alt="${product.productName}">
-		</c:if>
-
-		<h1>${product.productName}</h1>
-		<p>${product.productDescription}</p>
-		<p class="price">¥ ${product.price}</p>
-
-		<form action="AddtoCartServlet" method="post">
+	<div class="page-container">
+		
+		<form action="AddtoCartServlet" method="post" class="detail-card">
 			<input type="hidden" name="productId" value="${product.productId}">
 
-			<div class="section-title">数量</div>
-			<div style="margin-top: 10px;">
-				<input type="number" name="quantity" value="1" min="1" max="10"
-					required> 個
+			<div class="detail-main">
+				
+				<div class="image-section">
+					<c:choose>
+						<c:when test="${not empty product.productImageUrl}">
+							<img src="${product.productImageUrl}" alt="${product.productName}" class="main-img">
+						</c:when>
+						<c:otherwise>
+							<div class="no-image">No Image</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+
+				<div class="info-section">
+					<div class="product-subtext">EGGSUN定番オムライス</div> <h1 class="product-title">${product.productName}</h1>
+					<div class="product-price">¥ ${product.price}</div>
+
+					<c:if test="${not empty optionList}">
+						<div class="option-section">
+							<div class="option-header">オプション（トッピングなど）</div>
+							<div class="option-list">
+								<c:forEach var="opt" items="${optionList}">
+									<label class="option-item">
+										<input type="checkbox" name="optionIds" value="${opt.id}">
+										<span class="checkmark"></span>
+										<span class="option-text">
+											<c:out value="${opt.optionName}" />
+											<span class="opt-price">(+¥<c:out value="${opt.optionPrice}" />)</span>
+										</span>
+									</label>
+								</c:forEach>
+							</div>
+						</div>
+					</c:if>
+				</div>
 			</div>
 
-			<%-- 
-			  ★修正ポイント: 
-			  サーブレットから渡された optionList が空でない場合のみ表示する。
-			  これにより、オプション設定のない商品で無駄なスペースが表示されなくなります。
-			--%>
-			<c:if test="${not empty optionList}">
-				<div class="section-title">オプション（トッピングなど）</div>
+			<div class="detail-footer">
 				
-				<c:forEach var="opt" items="${optionList}">
-					<div class="option-item">
-						<label> 
-							<%-- valueはOptionDTOのID --%>
-							<input type="checkbox" name="optionIds" value="${opt.id}"> 
-							
-							<%-- 表示名 --%>
-							<c:out value="${opt.optionName}" />
-							(+¥<c:out value="${opt.optionPrice}" />)
-						</label>
-					</div>
-				</c:forEach>
-			</c:if>
-			<%-- オプション表示エリア終了 --%>
+				<a href="MenuListServlet" class="btn-cancel">キャンセル</a>
 
-			<button type="submit" class="btn-submit">カートに入れる</button>
+				<div class="qty-selector">
+					<button type="button" class="qty-btn" onclick="changeQty(-1)">－</button>
+					<span id="qty-display">1</span>
+					<button type="button" class="qty-btn" onclick="changeQty(1)">＋</button>
+					
+					<input type="hidden" name="quantity" id="qty-input" value="1">
+				</div>
+
+				<button type="submit" class="btn-add-cart">カートに追加</button>
+			</div>
+
 		</form>
-
-		<a href="MenuListServlet" class="btn-back">メニュー一覧に戻る</a>
 	</div>
 
+	<script>
+		function changeQty(amount) {
+			const qtyInput = document.getElementById('qty-input');
+			const qtyDisplay = document.getElementById('qty-display');
+			let currentQty = parseInt(qtyInput.value);
+
+			currentQty += amount;
+
+			// 最小値は1、最大値は10（必要に応じて変更）
+			if (currentQty < 1) currentQty = 1;
+			if (currentQty > 10) currentQty = 10;
+
+			qtyInput.value = currentQty;
+			qtyDisplay.textContent = currentQty;
+		}
+	</script>
 </body>
 </html>
