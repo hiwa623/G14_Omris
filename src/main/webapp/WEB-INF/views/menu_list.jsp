@@ -11,62 +11,59 @@
 <script src="assets/js/menu_list.js"></script>
 </head>
 <body>
-	<header>
-		<a href="javascript:void(0);" class="category-btn active"
-			onclick="filterCategory('all', this)">すべて</a>
 
-		<c:forEach var="cat" items="${viewModel.categoryList}">
-			<a href="javascript:void(0);" class="category-btn"
-				onclick="filterCategory('${cat.categoryId}', this)">
-				${cat.categoryName} </a>
-		</c:forEach>
-	</header>
+	<div class="app-container">
 
-	<div class="menu-container">
-		<c:forEach var="product" items="${viewModel.productList}">
+		<aside class="sidebar">
+			<a href="javascript:void(0);" class="category-btn active"
+				onclick="filterCategory('all', this)">すべて</a>
 
-			<div class="product-card" data-category-id="${product.categoryId}">
-				<c:choose>
-					<c:when test="${not empty product.productImageUrl}">
-						<img src="${product.productImageUrl}" class="product-image"
-							alt="${product.productName}">
-					</c:when>
-					<c:otherwise>
-						<div class="product-image"
-							style="display: flex; align-items: center; justify-content: center; color: #aaa;">No
-							Image</div>
-					</c:otherwise>
-				</c:choose>
+			<c:forEach var="cat" items="${viewModel.categoryList}">
+				<a href="javascript:void(0);" class="category-btn"
+					onclick="filterCategory('${cat.categoryId}', this)">
+					${cat.categoryName} </a>
+			</c:forEach>
+		</aside>
 
-				<div class="product-info">
-					<div>
-						<div class="product-name">${product.productName}</div>
-						<div class="product-desc">${product.productDescription}</div>
-					</div>
-					<div class="product-price">¥ ${product.price}</div>
-
-					<a href="ProductDetailServlet?id=${product.productId}"
-						class="add-btn"
-						style="text-align: center; text-decoration: none; display: block;">
-						商品詳細・オプション選択 </a>
+		<main class="main-content">
+			
+			<div class="top-header">
+				<div class="top-buttons">
+					<a href="OrderHistoryServlet" class="btn btn-history">注文履歴</a>
+					<a href="CheckoutConfirmServlet" class="btn btn-checkout">お会計</a>
 				</div>
 			</div>
 
-		</c:forEach>
-	</div>
+			<div class="scrollable-product-list">
+				<div class="menu-grid">
+					<c:forEach var="product" items="${viewModel.productList}">
+						<div class="product-card" data-category-id="${product.categoryId}">
+							<div class="image-area">
+								<c:choose>
+									<c:when test="${not empty product.productImageUrl}">
+										<img src="${product.productImageUrl}" class="product-image" alt="${product.productName}">
+									</c:when>
+									<c:otherwise>
+										<div class="no-image">No Image</div>
+									</c:otherwise>
+								</c:choose>
+							</div>
 
-	<div class="footer-bar">
-		<a href="CartServlet" class="cart-btn">注文確認へ進む</a>
-	</div>
-	<div style="text-align: right; margin-bottom: 10px;">
-		<a href="OrderHistoryServlet"
-			style="background: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 0.9rem;">
-			注文履歴を見る </a>
-		<div style="margin-top: 20px;">
-			<a href="CheckoutConfirmServlet"
-				style="display: block; background: #e67e22; color: white; padding: 15px; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold;">
-				お会計へ進む </a>
-		</div>
+							<div class="product-info">
+								<div class="product-name">${product.productName}</div>
+								<div class="product-price">¥ ${product.price}</div>
+								<a href="ProductDetailServlet?id=${product.productId}" class="add-btn-circle">＋</a>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+			</div>
+
+			<div class="floating-cart-area">
+				<a href="CartServlet" class="btn-cart-large">カートに進む</a>
+			</div>
+
+		</main>
 	</div>
 
 </body>

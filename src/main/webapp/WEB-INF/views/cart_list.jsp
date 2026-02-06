@@ -13,92 +13,88 @@
 <body>
 
 	<div class="cart-container">
-		<h1>ご注文内容の確認</h1>
-		<p>
-			テーブル番号: <strong>${sessionScope.tableId}</strong> / 人数: <strong>${sessionScope.customerCount}</strong>名
-		</p>
+		<div class="cart-header">
+			<h1>カート(ご注文内容の確認)</h1>
+			<p>
+				テーブル番号: <strong>${sessionScope.tableId}</strong> / 人数: <strong>${sessionScope.customerCount}</strong>名
+			</p>
+		</div>
 
 		<c:choose>
 			<c:when test="${empty vm.cartItems}">
-				<p style="text-align: center; padding: 30px;">カートに商品が入っていません。</p>
-				<div style="text-align: center;">
-					<a href="MenuListServlet" class="btn btn-back"
-						style="display: inline-block; width: 200px;">メニューに戻る</a>
+				<div class="empty-msg">
+					<p>カートに商品が入っていません。</p>
+					<a href="MenuListServlet" class="btn btn-back">メニューに戻る</a>
 				</div>
 			</c:when>
 
 			<c:otherwise>
-				<table>
-					<thead>
-						<tr>
-							<th>商品名 / オプション</th>
-							<th>単価</th>
-							<th>数量</th>
-							<th class="price-col">小計</th>
-							<th>削除</th>
-						</tr>
-					</thead>
-					<tbody>
-						<%-- varStatus="status" でループのインデックス(0,1,2...)を取得 --%>
-						<c:forEach var="item" items="${vm.cartItems}" varStatus="status">
+				<div class="cart-scroll-area">
+					<table>
+						<thead>
 							<tr>
-								<td><strong>${item.product.productName}</strong> <c:forEach
-										var="opt" items="${item.optionList}">
-										<div class="option-text">+ ${opt.optionName}
-											(¥${opt.optionPrice})</div>
-									</c:forEach></td>
-								<td>
-									<%-- 単価表示 --%> ¥ ${item.product.price}
-								</td>
-
-								<td>
-									<form action="UpdateCartServlet" method="post"
-										class="form-inline">
-										<input type="hidden" name="action" value="update"> <input
-											type="hidden" name="index" value="${status.index}"> <input
-											type="number" name="quantity" value="${item.quantity}"
-											min="1" max="99" class="qty-input">
-
-										<%-- ★修正: butto n のスペースを削除しました --%>
-										<button type="submit" class="btn-update">変更</button>
-									</form>
-								</td>
-
-								<td class="price-col">
-									<%-- 小計計算（商品単価×個数 ＋ オプション単価×個数） --%> <c:set var="itemTotal"
-										value="${item.product.price * item.quantity}" /> <c:forEach
-										var="opt" items="${item.optionList}">
-										<c:set var="itemTotal"
-											value="${itemTotal + (opt.optionPrice * item.quantity)}" />
-									</c:forEach> ¥ <fmt:formatNumber value="${itemTotal}" />
-								</td>
-
-								<td class="action-col">
-									<form action="UpdateCartServlet" method="post">
-										<input type="hidden" name="action" value="delete"> <input
-											type="hidden" name="index" value="${status.index}">
-										<button type="submit" class="btn-delete"
-											onclick="return confirm('削除してもよろしいですか？');">削除</button>
-									</form>
-								</td>
+								<th>商品名 / オプション</th>
+								<th>単価</th>
+								<th>　　数量</th>
+								<%-- ★削除: <th class="price-col">小計</th> --%>
+								<th>削除</th>
 							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							<c:forEach var="item" items="${vm.cartItems}" varStatus="status">
+								<tr>
+									<td><strong>${item.product.productName}</strong> <c:forEach
+											var="opt" items="${item.optionList}">
+											<div class="option-text">+ ${opt.optionName}
+												(¥${opt.optionPrice})</div>
+										</c:forEach></td>
+									<td>¥ ${item.product.price}</td>
+									<td>
+										<form action="UpdateCartServlet" method="post"
+											class="qty-form">
+											<input type="hidden" name="action" value="update"> <input
+												type="hidden" name="index" value="${status.index}">
 
-				<div class="total-area">
-					合計金額: <span class="total-price">¥ <fmt:formatNumber
-							value="${vm.totalPrice}" /></span>
+											<button type="submit" name="quantity"
+												value="${item.quantity - 1}" class="btn-qty"
+												${item.quantity <= 1 ? 'disabled' : ''}>－</button>
+
+											<span class="qty-display">${item.quantity}</span>
+
+											<button type="submit" name="quantity"
+												value="${item.quantity + 1}" class="btn-qty">＋</button>
+										</form>
+									</td>
+
+									<%-- ★削除: ここにあった小計計算（c:set 等）を含む <td>...</td> を丸ごと削除 --%>
+
+									<td class="action-col">
+										<form action="UpdateCartServlet" method="post">
+											<input type="hidden" name="action" value="delete"> <input
+												type="hidden" name="index" value="${status.index}">
+											<button type="submit" class="btn-delete"
+												onclick="return confirm('削除してもよろしいですか？');">削除</button>
+										</form>
+									</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
 				</div>
-
-				<form action="PlaceOrderServlet" method="post">
-					<div class="btn-group">
-						<a href="MenuListServlet" class="btn btn-back">買い物を続ける</a>
-						<%-- ★修正: 注文確定時の確認ダイアログを追加しました --%>
-						<button type="submit" class="btn btn-order"
-							onclick="return confirm('注文を確定してもよろしいですか？');">注文を確定する</button>
+				<div class="cart-footer">
+					<div class="total-area">
+						合計金額: <span class="total-price">¥ <fmt:formatNumber
+								value="${vm.totalPrice}" /></span>
 					</div>
-				</form>
+
+					<form action="PlaceOrderServlet" method="post" style="width: 100%;">
+						<div class="btn-group">
+							<a href="MenuListServlet" class="btn btn-back">買い物を続ける</a>
+							<button type="submit" class="btn btn-order"
+								onclick="return confirm('注文を確定してもよろしいですか？');">注文を確定する</button>
+						</div>
+					</form>
+				</div>
 			</c:otherwise>
 		</c:choose>
 	</div>

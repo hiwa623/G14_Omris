@@ -3,15 +3,30 @@
 body {
 	font-family: sans-serif;
 	text-align: center;
-	background-color: #f5f5f5;
-	padding: 20px;
+	background-color: #fdfdf2;
+	padding-top: 50px;
+}
+
+img{
+	margin-top: 20px;
+}
+
+.header-info {
+	text-align: right;
+	margin-top: 20px;
+	font-size: 0.8rem;
+}
+
+.reset-link {
+	color: gray;
 }
 
 .container {
-	max-width: 500px;
-	margin: 50px auto;
+	max-width: 830px;
+	max-height: 518px;
+	margin: 0px auto 50px auto;
 	background: #fff;
-	padding: 40px 20px;
+	padding: 20px 20px;
 	border-radius: 10px;
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -55,13 +70,14 @@ p {
 }
 
 .btn-count.plus {
-	color: #e67e22;
-	border-color: #e67e22;
+	color: #E6331D;
+	border-color: #E6331D;
 	background: #fff;
 }
 
 .btn-count.minus {
-	color: #95a5a6;
+	color: #E6331D;
+	border-color: #E6331D;
 }
 
 /* 人数表示エリア（inputタグだが入力不可に見せる） */
@@ -82,7 +98,7 @@ p {
 
 /* 決定ボタン */
 .btn-submit {
-	background-color: #e67e22;
+	background-color: #E6331D;
 	color: white;
 	border: none;
 	padding: 15px 40px;
@@ -92,8 +108,9 @@ p {
 	width: 100%;
 	max-width: 300px;
 	transition: background 0.3s;
+	margin-bottom: 7%;
 }
 
 .btn-submit:hover {
-	background-color: #d35400;
+	opacity: 0.9;
 }

@@ -8,18 +8,11 @@
 <link rel="stylesheet" href="assets/css/thank_you.css">
 </head>
 <body>
-
+<img alt="" src="assets/img/Group 76.png">
 <div class="container">
-    <div class="icon">✔</div>
-    <h1>ご注文を受け付けました</h1>
+    <h1>ご注文を受け付けました!</h1>
     <p>ただいま調理を開始いたしました。<br>商品到着まで少々お待ちください。</p>
-    
-    <div class="order-id">
-        注文番号: ${orderId}
-    </div>
-
     <a href="MenuListServlet" class="btn">メニューに戻って追加注文する</a>
 </div>
-
 </body>
 </html>

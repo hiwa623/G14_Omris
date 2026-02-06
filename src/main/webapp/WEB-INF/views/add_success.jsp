@@ -8,10 +8,9 @@
 <link rel="stylesheet" href="assets/css/add_success.css">
 </head>
 <body>
-
+<img alt="" src="assets/img/Group 76.png">
 <div class="msg-box">
     <h2>カートに追加しました！</h2>
-    <p>ご注文ありがとうございます。</p>
     
     <a href="MenuListServlet" class="btn btn-menu">メニューに戻って買い物を続ける</a>
     

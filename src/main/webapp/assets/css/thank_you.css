@@ -1,60 +1,48 @@
 @charset "UTF-8";
+html{
+	height: 1000px;
+}
 
 body {
 	font-family: sans-serif;
-	background: #2c3e50;
-	color: white;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	margin: 0;
 	text-align: center;
+	background-color: #fdfdf2;
+	padding-top: 70px;
 }
 
 .container {
-	background: white;
-	color: #333;
-	padding: 40px;
+	max-width: 830px;
+	height: auto;
+	margin: 0px auto 50px auto;
+	background: #fff;
+	padding: 20px 20px;
 	border-radius: 10px;
-	width: 90%;
-	max-width: 500px;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-	color: #27ae60;
-	margin-bottom: 10px;
+	margin: 5% auto 10px auto;
 }
 
-.icon {
-	font-size: 4rem;
-	color: #27ae60;
-	margin-bottom: 20px;
+p{
+	margin: 20px auto;
 }
 
-.order-id {
-	background: #eee;
-	padding: 10px;
+.container .btn {
 	display: inline-block;
-	border-radius: 5px;
-	margin: 20px 0;
-	font-weight: bold;
-}
-
-.btn {
-	display: block;
-	width: 100%;
-	padding: 15px;
-	background: #e67e22;
+	background-color: #E6331D;
 	color: white;
-	text-decoration: none;
-	border-radius: 5px;
+	border: none;
+	padding: 15px 40px;
 	font-size: 1.2rem;
-	margin-top: 20px;
-	box-sizing: border-box;
+	border-radius: 30px;
+	cursor: pointer;
+	width: 100%;
+	max-width: 300px;
+	transition: background 0.3s;
+	margin-bottom: 5%;
 }
 
 .btn:hover {
-	background: #d35400;
+	opacity: 0.9;
 }

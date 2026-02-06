@@ -2,12 +2,9 @@
 
 body {
 	font-family: sans-serif;
-	background: #333;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	margin: 0;
+	text-align: center;
+	background-color: #fdfdf2;
+	padding-top: 70px;
 }
 
 .msg-box {
@@ -17,17 +14,15 @@ body {
 	text-align: center;
 	width: 90%;
 	max-width: 400px;
+	margin: 0 auto;
 }
 
-h2 {
-	color: #27ae60;
-}
 
 .btn {
 	display: block;
 	width: 100%;
 	padding: 15px;
-	margin: 10px 0;
+	margin: 0 0 10px 0;
 	text-decoration: none;
 	border-radius: 5px;
 	box-sizing: border-box;
@@ -35,11 +30,11 @@ h2 {
 }
 
 .btn-menu {
-	background: #e67e22;
+	background: #585A60;
 	color: white;
 }
 
 .btn-cart {
-	background: #2980b9;
+	background: #E6331D;
 	color: white;
 }

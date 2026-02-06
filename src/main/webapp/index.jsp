@@ -5,9 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>オムライス屋さん - トップ</title>
+<script src="https://kit.fontawesome.com/492e7df7e0.js" crossorigin="anonymous"></script>
 </head>
 <body>
-	<h1>オムライス屋さんシステム</h1>
+	<h1>オムライス屋さんシステム<i class="fa-solid fa-house"></i><i class="fa-solid fa-circle-plus"></i></h1>
 
     <div class="menu-box">
         <h2>お客様はこちら</h2>

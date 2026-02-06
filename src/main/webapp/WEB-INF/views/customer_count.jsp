@@ -10,16 +10,9 @@
 <script src="assets/js/customer_count.js"></script>
 </head>
 <body>
-	<div style="text-align: right; margin-top: 20px; font-size: 0.8rem;">
-		現在設定中のテーブル:
-		<%=session.getAttribute("tableId")%>番<br> <a
-			href="StartOrderServlet?action=reset" style="color: gray;">[設定を解除してテーブル番号を変更]</a>
-	</div>
+	<img alt="" src="assets/img/Group 47.png">
 	<div class="container">
 		<h1>人数入力</h1>
-		<p>
-			Table No.
-			<%=session.getAttribute("tableId")%></p>
 		<p>ご利用人数を入力してください</p>
 
 		<form action="ConfirmCountServlet" method="post">
@@ -34,9 +27,11 @@
 					onclick="updateCount(1)">＋</button>
 			</div>
 
-			<button type="submit" class="btn-submit">メニューを見る</button>
+			<button type="submit" class="btn-submit">注文を開始する</button>
 		</form>
 	</div>
-
+	<div class="header-info">
+		<a href="StartOrderServlet?action=reset" class="reset-link">[設定を解除してテーブル番号を変更]</a>
+	</div>
 </body>
 </html>

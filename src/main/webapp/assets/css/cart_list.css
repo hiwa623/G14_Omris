@@ -1,72 +1,112 @@
 @charset "utf-8";
 
 body {
-	font-family: "Helvetica Neue", Arial, sans-serif;
-	background: #f5f5f5;
-	padding: 20px;
-	color: #333;
+	font-family: sans-serif;
+	background-color: #fdfdf2;
+	/* 画面中央に配置する場合 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	margin: 0;
 }
 
+/* ▼ 外枠の設定（固定サイズ） ▼ */
 .cart-container {
-	max-width: 900px;
-	margin: 0 auto;
 	background: white;
-	padding: 20px;
+	width: 90%;
+	max-width: 800px;
+	/* 横幅の最大値 */
+
+	height: 80vh;
+	/* ★重要: 画面の高さの80%に固定 */
+	max-height: 700px;
+	/* 高さの最大値（これ以上大きくならない） */
+
 	border-radius: 10px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+	/* ★重要: Flexboxを使って中身を縦並びにする */
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	/* 角丸からはみ出さないようにする */
 }
 
-h1 {
+/* ▼ ヘッダー部分 ▼ */
+.cart-header {
+	padding: 20px;
 	text-align: center;
+	background: #f9f9f9;
+	border-bottom: 1px solid #ddd;
+	flex-shrink: 0;
+	/* 縮まないように固定 */
+}
+
+.cart-header h1 {
+	margin: 0 0 10px 0;
+	font-size: 1.5rem;
+}
+
+.cart-header p {
+	margin: 0;
+}
+
+/* ▼ スクロールエリア（テーブル部分） ▼ */
+.cart-scroll-area {
+	padding: 20px;
+
+	/* ★重要: 余ったスペースを全部使う */
+	flex-grow: 1;
+
+	/* ★重要: 中身が多いときだけ縦スクロールする */
+	overflow-y: auto;
 }
 
 table {
 	width: 100%;
 	border-collapse: collapse;
-	margin-bottom: 20px;
 }
 
 th,
 td {
-	padding: 15px;
+	padding: 10px;
+	border-bottom: 1px solid #eee;
 	text-align: left;
-	border-bottom: 1px solid #ddd;
-	vertical-align: middle;
 }
 
 th {
-	background-color: #f9f9f9;
+	background-color: #f2f2f2;
+	position: sticky;
+	top: 0;
 }
 
-.price-col {
-	text-align: right;
-	white-space: nowrap;
-}
+/* ヘッダー固定したい場合 */
 
-.action-col {
-	text-align: center;
-	width: 150px;
-}
+/* ▼ フッター部分（合計金額・ボタン） ▼ */
+.cart-footer {
+	padding: 20px;
+	background: #fff;
+	border-top: 2px solid #eee;
 
-.option-text {
-	font-size: 0.9rem;
-	color: #666;
-	margin-left: 10px;
-	display: block;
+	flex-shrink: 0;
+	/* 縮まないように固定 */
+	z-index: 10;
 }
 
 .total-area {
 	text-align: right;
-	font-size: 1.5rem;
+	font-size: 1.2rem;
 	font-weight: bold;
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 }
 
 .total-price {
-	color: #d35400;
+	color: #e74c3c;
+	font-size: 1.5rem;
 }
 
-/* ボタン類のデザイン */
+/* ボタンレイアウト */
 .btn-group {
 	display: flex;
 	gap: 10px;
@@ -74,57 +114,80 @@ th {
 
 .btn {
 	flex: 1;
+	/* ボタンを均等な幅にする */
 	padding: 15px;
 	text-align: center;
-	border-radius: 5px;
 	text-decoration: none;
-	font-size: 1.1rem;
+	border-radius: 5px;
+	color: white;
 	border: none;
+	font-size: 1rem;
 	cursor: pointer;
 }
 
 .btn-back {
 	background: #95a5a6;
-	color: white;
 }
 
 .btn-order {
-	background: #d35400;
-	color: white;
-	font-weight: bold;
+	background: #e67e22;
 }
 
-/* 変更・削除ボタン用のスタイル */
-.qty-input {
-	width: 50px;
-	padding: 5px;
-	font-size: 1rem;
+/* その他細かい調整 */
+.empty-msg {
+	padding: 40px;
 	text-align: center;
 }
 
-.btn-update {
-	background-color: #3498db;
-	color: white;
-	border: none;
-	padding: 5px 10px;
-	border-radius: 3px;
-	cursor: pointer;
-	font-size: 0.9rem;
-	margin-left: 5px;
+.qty-input {
+	width: 50px;
+	padding: 5px;
 }
 
-.btn-delete {
-	background-color: #e74c3c;
-	color: white;
-	border: none;
-	padding: 8px 15px;
-	border-radius: 3px;
-	cursor: pointer;
-	font-size: 0.9rem;
+/* 数量変更フォームのレイアウト */
+.qty-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* ボタンと数字の間隔 */
 }
 
-/* フォームをインライン表示にするための調整 */
-.form-inline {
-	display: inline-flex;
-	align-items: center;
+/* ＋－ボタンのデザイン */
+.btn-qty {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* 丸いボタンにする */
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    
+    /* 文字を真ん中に */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    transition: background 0.2s;
+}
+
+.btn-qty:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+/* 数量が1の時にマイナスボタンを薄くする */
+.btn-qty:disabled {
+    background-color: #f9f9f9;
+    color: #ccc;
+    border-color: #eee;
+    cursor: not-allowed;
+}
+
+/* 数字の表示デザイン */
+.qty-display {
+    font-size: 1.1rem;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
 }

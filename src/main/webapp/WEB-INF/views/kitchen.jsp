@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>キッチン｜注文料理一覧</title>
 <link rel="stylesheet" href="assets/css/kitchen.css">
+<script src="https://kit.fontawesome.com/492e7df7e0.js" crossorigin="anonymous"></script>
 <script>
     setInterval(() => location.reload(), 3000);
 </script>
