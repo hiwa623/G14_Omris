@@ -14,7 +14,7 @@
 				<a class="btnLink"
 					href="${pageContext.request.contextPath}/KitchenServlet">いいえ</a>
 				<form method="post"
-					action="${pageContext.request.contextPath}/KitchenCompleteServlet">
+					action="${pageContext.request.contextPath}/KitchenServlet">
 					<input type="hidden" name="orderDetailId" value="${orderDetailId}">
 					<button class="btn" type="submit">はい</button>
 				</form>
