@@ -1,41 +1,120 @@
 @charset "UTF-8";
 
+/* ベース設定 */
 body {
-	font-family: sans-serif;
-	padding: 50px;
-	text-align: center;
-	background: #f0f0f0;
+	font-family: "Helvetica Neue", Arial, sans-serif;
+	background-color: #fdfdf2;
+	/* ログイン画面と同じ背景色 */
+	padding: 20px;
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	/* 左右中央寄せ */
+	align-items: flex-start;
+	/* 上寄せ（長いページになるため） */
+	min-height: 100vh;
+	color: #333;
 }
 
+/* メインカード */
 .container {
-	max-width: 500px;
-	margin: 0 auto;
 	background: white;
+	width: 100%;
+	max-width: 600px;
+	/* タブレットで見やすい幅 */
 	padding: 40px;
-	border-radius: 10px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	margin-top: 30px;
+	margin-bottom: 30px;
+	border-radius: 12px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+	text-align: center;
 }
 
+h1 {
+	font-size: 1.8rem;
+	margin-bottom: 10px;
+	color: #444;
+}
+
+.subtitle {
+	color: #666;
+	margin-bottom: 30px;
+}
+
+h3 {
+	text-align: left;
+	font-size: 1rem;
+	color: #888;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 5px;
+	margin-top: 25px;
+	margin-bottom: 15px;
+}
+
+/* ボタングループ */
+.btn-group {
+	margin-bottom: 20px;
+}
+
+/* ボタン共通設定 */
 .btn {
 	display: block;
 	width: 100%;
-	padding: 15px;
-	margin: 10px 0;
+	padding: 18px;
+	/* 指で押しやすい高さ */
+	margin-bottom: 15px;
 	text-decoration: none;
 	color: white;
-	border-radius: 5px;
+	border-radius: 8px;
 	font-size: 1.2rem;
+	font-weight: bold;
 	box-sizing: border-box;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: all 0.2s ease;
 }
 
-.btn-list {
-	background: #3498db;
+.btn:hover {
+	opacity: 0.9;
+	transform: translateY(-2px);
+	/* 少し浮き上がる */
 }
 
-.btn-register {
-	background: #2ecc71;
+.btn:active {
+	transform: scale(0.98);
+	/* 押した感触 */
 }
 
-.btn-back {
-	background: #95a5a6;
+/* 色分け */
+.btn-blue {
+	background-color: #3498db;
+	/* 青: 一覧など */
+}
+
+.btn-green {
+	background-color: #2ecc71;
+	/* 緑: 登録アクション */
+}
+
+.btn-teal {
+	background-color: #1abc9c;
+	/* 青緑: 売上など */
+}
+
+.btn-orange {
+	background-color: #e67e22;
+	/* オレンジ: 設定・管理 */
+}
+
+.btn-gray {
+	background-color: #95a5a6;
+	/* グレー: 戻る */
+	margin-top: 30px;
+}
+
+/* 区切り線 */
+hr {
+	border: 0;
+	height: 1px;
+	background: #ddd;
+	margin: 30px 0;
 }
