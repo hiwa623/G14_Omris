@@ -26,6 +26,6 @@ public class KitchenCompleteServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        response.sendRedirect(request.getContextPath() + "/KitchenCompletedServlet");
+        response.sendRedirect(request.getContextPath() + "/KitchenServlet");
     }
 }

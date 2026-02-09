@@ -85,7 +85,7 @@ body {
     font-size: 1.2rem;
 }
 .btn-history { background: #fff; border: 2px solid #E6331D; color: #E6331D; }
-.btn-checkout { background: #fdfdf2; color: white; border: none; }
+.btn-checkout { background: #E6331D; color: white; border: none; }
 
 /* -- 5. 商品リスト（スクロールエリア）-- */
 .scrollable-product-list {

@@ -36,7 +36,7 @@
             </div>
         <% } %>
 
-        <form action="login" method="post">
+        <form action="LoginServlet" method="post">
             <div class="form-group">
                 <input type="text" name="loginId" placeholder="ログインID" 
                        value="<%= (vm.getLoginId() != null) ? vm.getLoginId() : "" %>" required>

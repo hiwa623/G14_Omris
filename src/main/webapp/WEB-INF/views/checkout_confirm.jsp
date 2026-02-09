@@ -19,7 +19,7 @@
 		<div class="table-info">
 			<div class="table-label">Table No.</div>
 			<%-- セッションからテーブルIDを表示 --%>
-			<div class="table-no"><%=session.getAttribute("tableId")%></div>
+			<div class="table-no">${tableNo}</div>
 		</div>
 
 		<div class="total-section">
