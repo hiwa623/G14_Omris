@@ -75,7 +75,7 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("viewModel", vm);
 
 			// ログイン画面を再表示
-			request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}
 	}
 
