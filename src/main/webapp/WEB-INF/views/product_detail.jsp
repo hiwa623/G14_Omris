@@ -30,7 +30,7 @@
 				</div>
 
 				<div class="info-section">
-					<div class="product-subtext">EGGSUN定番オムライス</div> <h1 class="product-title">${product.productName}</h1>
+					<div class="product-subtext">${product.productDescription }</div> <h1 class="product-title">${product.productName}</h1>
 					<div class="product-price">¥ ${product.price}</div>
 
 					<c:if test="${not empty optionList}">

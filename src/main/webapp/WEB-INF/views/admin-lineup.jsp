@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/css/admin-lineup.css">
 </head>
 <body>
-
+<a href="RegisterServlet" class="btn btn-green">✨ 新規商品登録</a>
 	<div class="container">
 		<a href="ManagerServlet" class="btn btn-back">← メニューに戻る</a>
 		<h1>登録商品一覧</h1>
