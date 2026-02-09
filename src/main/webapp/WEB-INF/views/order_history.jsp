@@ -37,7 +37,7 @@
                             <c:choose>
                                 <c:when test="${detail.statusId == 'SERVED'}">background:#95a5a6;</c:when>  <%-- 提供済(グレー) --%>
                                 <c:when test="${detail.statusId == 'COOKING'}">background:#e74c3c;</c:when> <%-- 調理中(赤) --%>
-                                <c:otherwise>background:#2ecc71;</c:otherwise>  <%-- 未調理(緑) --%>
+                                <c:otherwise>background:#585A60;</c:otherwise>  <%-- 未調理(緑) --%>
                             </c:choose>
                         ">
                             ${detail.statusName}

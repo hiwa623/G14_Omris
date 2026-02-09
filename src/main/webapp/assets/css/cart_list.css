@@ -156,9 +156,9 @@ th {
     width: 30px;
     height: 30px;
     border-radius: 50%; /* 丸いボタンにする */
-    border: 1px solid #ccc;
+    border: 1px solid #E6331D;
     background-color: #fff;
-    color: #333;
+    color: #E6331D;
     font-size: 1.2rem;
     line-height: 1;
     cursor: pointer;
@@ -179,8 +179,8 @@ th {
 /* 数量が1の時にマイナスボタンを薄くする */
 .btn-qty:disabled {
     background-color: #f9f9f9;
-    color: #ccc;
-    border-color: #eee;
+    color: #E6331D;
+    border-color: #E6331D;
     cursor: not-allowed;
 }
 
@@ -190,4 +190,9 @@ th {
     font-weight: bold;
     min-width: 20px;
     text-align: center;
+}
+
+.btn-delete {
+	background-color: #f0f0f0;
+	border-color: #f0f0f0;
 }
